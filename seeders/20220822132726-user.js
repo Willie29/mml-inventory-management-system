@@ -17,6 +17,7 @@ module.exports = {
                 "email": "admin@mail.com",
                 "password": "pass123",
                 "role": "admin",
+                phone: "081234567890",
                 position: "Manager",
                 firstName: "Admin",
                 lastName: "Satu"
@@ -25,6 +26,7 @@ module.exports = {
                 "email": "kasino@mail.com",
                 "password": "pass123",
                 "role": "employee",
+                phone: "081234567890",
                 position: "Staff",
                 firstName: "Kasino",
                 lastName: "Indro"

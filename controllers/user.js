@@ -2,15 +2,16 @@ const {User, Product} = require('../models')
 const {comparePassword} = require('../helpers/bcrypt');
 const {createToken} = require('../helpers/jwt')
 const response = require('../helpers/response')
+const {Op} = require("sequelize");
 
 class Controller {
     static async register(req, res, next) {
         try {
             const user = await User.create(req.body)
 
-            return response.successResponse(res, null, `Admin ${user.username} with email ${user.email} has been created`)
+            return response.successResponse(res, null, `${user.username} with email ${user.email} has been created`)
         } catch (error) {
-            if (error.original.code === '23502') {
+            if (error?.original?.code === '23502') {
                 throw res.status(400).json({message: `Username is empty`});
             }
             next(error)
@@ -64,7 +65,40 @@ class Controller {
 
     static async getAllUser(req, res, next) {
         try {
-            const users = await User.findAll({attributes: {exclude: ['password']}})
+            const {name, role} = req.query
+            let where = {}
+
+            if(name){
+                where = {
+                    firstName: {
+                        [Op.like]: `%${name}%`
+                    }
+                }
+            }
+
+            if(role){
+                where = {
+                    role: {
+                        [Op.like]: `%${role}%`
+                    }
+                }
+            }
+
+            if(name && role){
+                where = {
+                    firstName: {
+                        [Op.like]: `%${name}%`
+                    },
+                    role: {
+                        [Op.like]: `%${role}%`
+                    }
+                }
+            }
+
+            const users = await User.findAll({
+                attributes: {exclude: ['password']},
+                where
+            })
             return response.successResponse(res, users, 'Success get all user')
         } catch (error) {
             next(error)
