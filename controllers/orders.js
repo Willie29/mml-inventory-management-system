@@ -1,17 +1,14 @@
-const {Order, Product, Location, User, History} = require('../models')
+const {Order, Product, Location, User, History, Cart} = require('../models')
 const response = require('../helpers/response')
 
 class Controller {
     static async createOrder(req, res, next) {
         try {
             const order = await Order.create({
-                ...req.body,
-                UserId: req.params.id
+                ...req.body, UserId: req.params.id
             })
             await History.create({
-                log_type: 'User Order',
-                UserId: req.params.id,
-                OrderId: order.id
+                log_type: 'User Order', UserId: req.params.id, OrderId: order.id
             })
             return response.successResponse(res, order, 'Order created successfully')
         } catch (e) {
@@ -22,17 +19,13 @@ class Controller {
     static async getAllOrders(req, res, next) {
         try {
             const order = await Order.findAll({
-                include: [
-                    {
-                        model: Product,
-                    },
-                    {
-                        model: Location,
-                    },
-                    {
-                        model: User,
-                    }
-                ]
+                include: [{
+                    model: Product,
+                }, {
+                    model: Location,
+                }, {
+                    model: User,
+                }]
             })
 
             return response.successResponse(res, order, 'Order fetched successfully')
@@ -46,18 +39,15 @@ class Controller {
             const order = await Order.findAll({
                 where: {
                     UserId: req.params.id
-                },
-                include: [
-                    {
-                        model: Product,
-                    },
-                    {
-                        model: Location,
-                    },
-                    {
-                        model: User,
-                    }
-                ]
+                }, include: [{
+                    model: Product,
+                }, {
+                    model: Location,
+                }, {
+                    model: User,
+                }, {
+                    model: Cart
+                }]
             })
 
             return response.successResponse(res, order, 'Order fetched successfully')
@@ -71,24 +61,69 @@ class Controller {
             const order = await Order.findOne({
                 where: {
                     UserId: req.params.id
-                },
+                }, include: [{
+                    model: Product,
+                }, {
+                    model: Location,
+                }, {
+                    model: User,
+                }, {
+                    model: Cart
+                }]
+            })
+
+            return response.successResponse(res, order, 'Order fetched successfully')
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    static async acceptOrders(req, res, next) {
+        try {
+            const findOrder = await Order.findByPk(req.params.id, {
                 include: [
                     {
-                        model: Product,
-                        as: 'product'
-                    },
-                    {
-                        model: Location,
-                        as: 'location'
-                    },
-                    {
-                        model: User,
-                        as: 'user'
+                        model: Cart,
+                        include: [
+                            {
+                                model: Product
+                            }
+                        ]
                     }
                 ]
             })
 
-            return response.successResponse(res, order, 'Order fetched successfully')
+            if (!findOrder) {
+                throw {message: 'Order not found'}
+            }
+
+            if (findOrder.orderStatus === 'completed') {
+                throw {message: 'Order already accepted'}
+            }
+
+            const order = await Order.update(req.body, {
+                where: {
+                    id: findOrder.id
+                }
+            })
+
+            findOrder.Carts.forEach(async (cart) => {
+                const product = await Product.update({
+                    stock: cart.Product.stock - cart.quantity
+                }, {
+                    where: {
+                        id: cart.ProductId
+                    }
+                })
+                if(product[0] === 0) {
+                    throw {message: 'Product not found'}
+                }
+            })
+
+            await History.create({
+                log_type: 'User Confirm Order', OrderId: req.params.id
+            })
+            return response.successResponse(res, order, 'Order updated successfully')
         } catch (e) {
             next(e)
         }
