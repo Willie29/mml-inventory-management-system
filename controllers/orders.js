@@ -101,11 +101,16 @@ class Controller {
                 throw {message: 'Order already accepted'}
             }
 
-            const order = await Order.update(req.body, {
+            const order = await Order.update({
+                orderStatus: 'accepted',
+                confirmTime: new Date()
+            }, {
                 where: {
                     id: findOrder.id
                 }
             })
+
+            console.log(findOrder.Carts)
 
             findOrder.Carts.forEach(async (cart) => {
                 const product = await Product.update({
