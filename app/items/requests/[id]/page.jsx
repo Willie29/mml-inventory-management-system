@@ -11,7 +11,7 @@ const Page = () => {
   const { id } = useParams();
 
   const [qty, setQty] = useState(0);
-  const [selectedOption, setSelectedOption] = useState('Mitra Utama');
+  const [selectedOption, setSelectedOption] = useState("Mitra Utama");
   const handleSelectChange = (event) => {
     // Get the selected value from the event
     const selectedValue = event.target.value;
@@ -44,9 +44,17 @@ const Page = () => {
           <div className="card">
             <h2 className="mt-5 text-center">Add Stock</h2>
 
-            <input type="text" onChange={(e) => setQty(e.target.value)} className="input-stock" />
+            <input
+              type="text"
+              onChange={(e) => setQty(e.target.value)}
+              className="input-stock"
+            />
 
-            <button type="button" onClick={updateStockItems} className="mt-5 input-stock-btn">
+            <button
+              type="button"
+              onClick={updateStockItems}
+              className="mt-5 input-stock-btn"
+            >
               Update
             </button>
           </div>

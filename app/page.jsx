@@ -1,6 +1,5 @@
-"use client"
+"use client";
 import { useRouter } from "next/navigation";
-
 
 const Login = () => {
   const router = useRouter();
@@ -11,8 +10,7 @@ const Login = () => {
   return (
     <>
       <section className="container">
-        <div className="loginPage">
-        </div>
+        <div className="loginPage"></div>
       </section>
     </>
   );
