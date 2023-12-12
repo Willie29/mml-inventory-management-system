@@ -90,6 +90,25 @@ class Controller {
         }
     }
 
+    static async getOrderByOrderId(req, res, next) {
+        try {
+            const order = await Order.findByPk(req.params.id, {
+                include: [{
+                    model: Product,
+                }, {
+                    model: Location,
+                }, {
+                    model: User,
+                }, {
+                    model: Cart
+                }]
+            })
+            return response.successResponse(res, order, 'Order fetched successfully')
+        } catch (e) {
+            next(e)
+        }
+    }
+
     static async acceptOrders(req, res, next) {
         try {
             const findOrder = await Order.findByPk(req.params.id, {

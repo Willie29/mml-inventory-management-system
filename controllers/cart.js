@@ -44,7 +44,9 @@ class Controller {
 
     static async updateCart(req, res, next) {
         try {
-            const order = await Order.update(req.body, {
+            console.log(req.body)
+            console.log(req.params.id)
+            const order = await Cart.update(req.body, {
                 where: {
                     id: req.params.id
                 }
