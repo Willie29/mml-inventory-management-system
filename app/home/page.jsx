@@ -1,7 +1,6 @@
 "use client";
 import {useEffect, useState} from "react";
 import Layouts from "../components/layouts";
-import {getAllOrders, getAllStocks} from "../api";
 import moment from "moment";
 import {useRouter} from "next/navigation";
 import {useDispatch} from "react-redux";
@@ -15,20 +14,34 @@ const Page = () => {
     const [data, setData] = useState([]);
     const [dataRequest, setDataRequest] = useState([])
     const [dataProducts, setDataProducts] = useState([])
+    const [roleUser, setRoleUser] = useState(null)
 
     const getOrders = async () => {
-        const orderUser = await dispatch(orders.getAllOrders());
-        setData(orderUser.payload.data.data);
+        if (localStorage.getItem('role') === 'admin') {
+            const orderAdmin = await dispatch(orders.getAllOrders());
+            setData(orderAdmin.payload.data.data);
+        } else {
+            const orderUser = await dispatch(orders.getOrdersByUser(localStorage.getItem('iduser')));
+            setData(orderUser.payload.data.data);
+        }
     }
 
     const getProducts = async () => {
-        const productsResult = await dispatch(products.getAllProducts('zero'))
+        const productsResult = await dispatch(products.getAllProducts({
+            filter: 'zero'
+        }))
         setDataProducts(productsResult.payload.data.data)
     }
 
     const getRequestProduct = async () => {
-        const productsResult = await dispatch(requests.getAllRequests())
-        setDataRequest(productsResult.payload.data.data)
+        if (localStorage.getItem('role') === 'admin') {
+            const productsResult = await dispatch(requests.getAllRequests())
+            setDataRequest(productsResult.payload?.data?.data)
+        } else {
+            const productsResult = await dispatch(requests.getRequestByUser(localStorage.getItem('iduser')))
+            console.log(productsResult.payload)
+            setDataRequest(productsResult.payload?.data?.data)
+        }
     }
 
     useEffect(() => {
@@ -37,6 +50,12 @@ const Page = () => {
             await getProducts();
             await getRequestProduct();
         })()
+    }, []);
+
+    useEffect(() => {
+        const role = localStorage.getItem('role')
+        setRoleUser(role)
+
     }, []);
 
     const toEditPage = () => {
@@ -60,7 +79,7 @@ const Page = () => {
             </div>
 
             <div className="mt-5">
-                {localStorage.getItem("role") == "admin" ? (<>
+                {roleUser == "admin" && (<>
                     <h1 style={{marginTop: "70px"}}>Out Of Items</h1>
 
                     <div
@@ -94,9 +113,9 @@ const Page = () => {
                             </tbody>
                         </table>
                     </div>
-                </>) : (<></>)}
+                </>)}
 
-                <h1>My Order Items</h1>
+                {roleUser === 'admin' ? (<h1>Ordered Items</h1>) : (<h1>My Order Items</h1>)}
 
                 <div className="card">
                     <table>
@@ -115,27 +134,32 @@ const Page = () => {
                             <td>{moment(item.requestDate).format("MMMM Do YYYY")}</td>
                             <td>{item.Location?.name}</td>
                             <td>{item.orderStatus == "pending" ? "-" : moment(item.confirmTime).format("MMMM DD YYYY")}</td>
-                            {localStorage.getItem("role") == "admin" ? (<></>) : (<td>
+                            {roleUser !== "admin" && (<td>
                                     <span
-                                        className={`${item.status == "pending" ? "badge badge-error" : "badge badge-success"}`}
+                                        className={`${item.orderStatus == "pending" ? "badge badge-error" : "badge badge-success"}`}
                                     >
-                                        {item.status}
+                                        {item.orderStatus}
                                 </span>
-                            </td>)}
+                                </td>
+                            )}
                             <td>
-                      <Link href={`/items/orders/detail/${item.id}`}
-                          className="badge badge-primary"
-                          style={{color: "white", cursor: "pointer"}}
-                          onClick={toEditPage2}
-                      >
-                        More info
-                      </Link>
+                                {roleUser === 'admin' && (
+                                    <Link href={`/items/orders/detail/${item.id}`}
+                                          className="badge badge-primary"
+                                          style={{color: "white", cursor: "pointer"}}
+                                          onClick={toEditPage2}
+                                    >
+                                        More info
+                                    </Link>
+                                )}
                             </td>
                         </tr>))}
                         </tbody>
                     </table>
                 </div>
-                <h1 style={{marginTop: "70px"}}>My Request Items</h1>
+
+                {roleUser === 'admin' ? (<h1 style={{marginTop: "70px"}}>Requested Items</h1>) : (
+                    <h1 style={{marginTop: "70px"}}>My Request Items</h1>)}
 
                 <div
                     className="card"

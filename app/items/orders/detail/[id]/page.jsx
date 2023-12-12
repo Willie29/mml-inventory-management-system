@@ -1,24 +1,22 @@
 "use client";
 import {Messaege} from "../../../../helper/Message";
 import {useEffect, useState} from "react";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useParams} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
 import Layouts from "../../../../components/layouts";
 import moment from "moment";
 import {orders} from "../../../../stores/thunk/index";
 
 const DetailOrder = () => {
-    const router = useRouter();
     const cartRedux = useSelector((state) => state.addCart.cart);
     const searchParams = useParams()
     const dispatch = useDispatch();
 
     const [detailOrder, setDetailOrder] = useState(null)
 
-
     useEffect(() => {
         (async () => {
-            const orderDetail = await dispatch(orders.getOrderDetailByUser(searchParams.id))
+            const orderDetail = await dispatch(orders.getOrderByOrderId(searchParams.id))
             if (orderDetail.payload.data) {
                 setDetailOrder(orderDetail.payload.data.data)
             }
@@ -30,7 +28,7 @@ const DetailOrder = () => {
             const resultApi = await dispatch(orders.confirmOrder(searchParams.id))
             if (resultApi?.payload?.data) {
                 Messaege("Succes", "Success Order", "success");
-                const orderDetail = await dispatch(orders.getOrderDetailByUser(searchParams.id))
+                const orderDetail = await dispatch(orders.getOrderByOrderId(searchParams.id))
                 if (orderDetail.payload.data) {
                     setDetailOrder(orderDetail.payload.data.data)
                 }
@@ -100,19 +98,24 @@ const DetailOrder = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {detailOrder?.Carts?.map((item => (<tr key={item.id}>
-                            <td>Pipa</td>
-                            <td>100</td>
-                            <td>Pcs</td>
-                            <td>{moment(item.requestDate).format('YYYY-MM-DD')}</td>
-                            <td>{detailOrder?.Location?.name}</td>
-                        </tr>)))}
+                        {detailOrder?.Carts?.map((item => (
+                            <tr key={item.id}>
+                                <td>Pipa</td>
+                                <td>100</td>
+                                <td>Pcs</td>
+                                <td>{moment(item.requestDate).format('YYYY-MM-DD')}</td>
+                                <td>{detailOrder?.Location?.name}</td>
+                            </tr>
+                        )))}
                         </tbody>
                     </table>
 
-                    <div className={'d-flex justify-content-center mt-4'}>
-                        <button type="button" onClick={() => confirmOrder()} className="btn btn-success">Confirm</button>
-                    </div>
+                    {localStorage.getItem('role') === 'admin' && detailOrder?.orderStatus === 'pending' && (
+                        <div className={'d-flex justify-content-center mt-4'}>
+                            <button type="button" onClick={() => confirmOrder()} className="btn btn-success">Confirm
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

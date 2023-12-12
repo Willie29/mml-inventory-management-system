@@ -15,10 +15,16 @@ const getRequestByUser = createAsyncThunk(
 
 const getAllRequests = createAsyncThunk(
     'requests/getAllRequests',
-    async (search) => {
+    async (payload) => {
         try {
-            if(search)
-                return await axios.get(`${API.API_URL}/requests?name=${search}`)
+            if(payload?.search){
+                return await axios.get(`${API.API_URL}/requests?name=${payload?.search}`)
+            }
+
+            if(payload?.user){
+                return await axios.get(`${API.API_URL}/requests?user=${payload?.user}`)
+            }
+
             return await axios.get(`${API.API_URL}/requests`)
         } catch (e) {
             return e
