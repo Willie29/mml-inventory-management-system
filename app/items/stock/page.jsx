@@ -107,7 +107,7 @@ const Page = () => {
                         {item.stock > 0 ? "Available" : "out of stock"}
                       </span>
                     </td>
-                    {localStorage.getItem("role") == "admin" ? (
+                    {localStorage.getItem("role") === "admin" ? (
                       <td onClick={() => toEditPage(item.id)}>
                         <span
                           className="badge badge-primary"
