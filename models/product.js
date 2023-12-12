@@ -14,13 +14,15 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'LocationId',
                 targetKey: 'id',
                 sourceKey: 'LocationId',
+                onDelete: 'CASCADE',
+                onUpdate: 'CASCADE'
             })
         }
     }
 
     Product.init({
         name: DataTypes.STRING,
-        uom: DataTypes.STRING,
+        stock: DataTypes.INTEGER,
         category: DataTypes.STRING,
     }, {
         sequelize,

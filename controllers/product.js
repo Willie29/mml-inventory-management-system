@@ -15,6 +15,7 @@ class Controller {
                 return response.successResponse(res, product, 'Success get data')
             }
             const product = await Product.findAll({
+                include: [Location]
             })
             return response.successResponse(res, product, 'Success get data')
         } catch (error) {

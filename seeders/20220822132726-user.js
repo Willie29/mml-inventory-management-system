@@ -16,7 +16,7 @@ module.exports = {
                 "username": "admin",
                 "email": "admin@mail.com",
                 "password": "pass123",
-                "role": "Admin",
+                "role": "admin",
                 position: "Manager",
                 firstName: "Admin",
                 lastName: "Satu"
@@ -24,7 +24,7 @@ module.exports = {
                 "username": "kasino",
                 "email": "kasino@mail.com",
                 "password": "pass123",
-                "role": "Employee",
+                "role": "employee",
                 position: "Staff",
                 firstName: "Kasino",
                 lastName: "Indro"

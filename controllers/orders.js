@@ -4,14 +4,38 @@ const response = require('../helpers/response')
 class Controller {
     static async createOrder(req, res, next) {
         try {
-            console.log(req.body)
-            const order = await Order.create(req.body)
+            const order = await Order.create({
+                ...req.body,
+                UserId: req.params.id
+            })
             await History.create({
                 log_type: 'User Order',
                 UserId: req.params.id,
                 OrderId: order.id
             })
             return response.successResponse(res, order, 'Order created successfully')
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    static async getAllOrders(req, res, next) {
+        try {
+            const order = await Order.findAll({
+                include: [
+                    {
+                        model: Product,
+                    },
+                    {
+                        model: Location,
+                    },
+                    {
+                        model: User,
+                    }
+                ]
+            })
+
+            return response.successResponse(res, order, 'Order fetched successfully')
         } catch (e) {
             next(e)
         }
@@ -26,15 +50,12 @@ class Controller {
                 include: [
                     {
                         model: Product,
-                        as: 'product'
                     },
                     {
                         model: Location,
-                        as: 'location'
                     },
                     {
                         model: User,
-                        as: 'user'
                     }
                 ]
             })

@@ -15,13 +15,13 @@ module.exports = {
     const data = [
       {
         name: 'Jakarta',
-        stock: 100,
+        uom: 'pcs',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Bandung',
-        stock: 100,
+        uom: 'pcs',
         createdAt: new Date(),
         updatedAt: new Date()
       }

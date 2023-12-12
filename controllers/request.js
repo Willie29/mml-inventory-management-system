@@ -2,7 +2,7 @@ const {Product, Location, History, Request} = require('../models');
 const response = require('../helpers/response');
 
 class Controller {
-    static async getAllProducts(req, res, next) {
+    static async getAllRequestByUser(req, res, next) {
         try {
             const products = await Request.findAll({
                 where: {
@@ -14,15 +14,38 @@ class Controller {
                 }]
             });
 
-            res.json({products}); // Mengirimkan produk beserta lokasi terkait
+            return response.successResponse(res, products, 'Request retrieved successfully');
         } catch (err) {
             next(err);
         }
     }
 
-    static async createProduct(req, res, next) {
+    static async getAllRequests(req, res, next) {
         try {
-            const newRequest = await Request.create(req.body);
+            const products = await Request.findAll({
+                include: [
+                    {
+                        model: Location, // Menghubungkan dengan model Location
+                        attributes: ['id', 'name'] // Attribut dari model Location yang ingin di-include
+                    },
+                    {
+                        model: Product,
+                        attributes: ['id', 'name', 'stock', 'category']
+                    }
+                ]
+            });
+
+            return response.successResponse(res, products, 'Request retrieved successfully');
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    static async createRequest(req, res, next) {
+        try {
+            const newRequest = await Request.create({
+                ...req.body,
+            });
             return response.successResponse(res, newRequest, 'Request created successfully');
         } catch (err) {
             next(err);

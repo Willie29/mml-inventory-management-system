@@ -17,7 +17,7 @@ module.exports = {
         "name": "DC Shoes Striker",
         category: 'Shoes',
         LocationId: 1,
-        uom: 'pcs'
+        stock: 100,
       }
     ]
 

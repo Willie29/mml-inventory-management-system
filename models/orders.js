@@ -8,15 +8,29 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             Order.belongsTo(models.User, {
                 foreignKey: "UserId",
-                as : "User",
                 targetKey: "id",
                 sourceKey: "UserId",
-                onDelete: "SET NULL",
-                onUpdate: "SET NULL"
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE"
             })
             Order.hasMany(models.Cart, {
                 foreignKey: "CartId",
-                as : "Carts"
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE"
+            })
+            Order.belongsTo(models.Product, {
+                foreignKey: "ProductId",
+                targetKey: "id",
+                sourceKey: "ProductId",
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE"
+            })
+            Order.belongsTo(models.Location, {
+                foreignKey: "LocationId",
+                targetKey: "id",
+                sourceKey: "LocationId",
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE"
             })
         }
     };
