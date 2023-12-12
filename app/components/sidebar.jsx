@@ -85,7 +85,6 @@ const Sidebar = () => {
       ],
     },
   ];
-  console.log(menuData);
 
   return (
     <>

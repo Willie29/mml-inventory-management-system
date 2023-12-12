@@ -78,6 +78,8 @@ export const getAllStocks = get("stock");
 export const updateOrder = patch("orders/update");
 export const getAllOrders = get("orders");
 
+export const getOrdersByUser = async (user_id) => get(`orders/user/${user_id}`);
+
 export const postStoks = post("stock");
 
 export const updateStock = patch("stock");
