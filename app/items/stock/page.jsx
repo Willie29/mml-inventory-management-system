@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import {addToCart} from "../../stores/action/addCart";
 import {Messaege} from "../../helper/Message";
 import {products} from "../../stores/thunk/index";
+import Link from "next/link";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -117,30 +118,15 @@ const Page = () => {
                         </span>
                       </td>
                     ) : (
-                      <td
-                        onClick={() => {
-                          if(item.qty == 0){
-                            return
-                          }
-                          distpatchCart(item.id),
-                            dispatch(
-                              addToCart({
-                                name: item.name,
-                                category: item.category,
-                                qty: item.qty,
-                                uom: item.uom,
-                                status: item.status,
-                                location: item.location,
-                              })
-                            );
-                        }}
-                      >
-                        <span
-                          className={`badge ${item.qty === 0 ? 'badge-disabled' : 'badge-primary'}`}
-                          style={{ color: "white", cursor: "pointer" }}
-                        >
-                          Order Item
-                        </span>
+                      <td>
+                        <Link href={`/items/orders/${item.id}`}>
+                            <span
+                                className="badge badge-primary"
+                                style={{ color: "white", cursor: "pointer" }}
+                            >
+                                Order Item
+                            </span>
+                        </Link>
                       </td>
                     )}
                   </tr>
