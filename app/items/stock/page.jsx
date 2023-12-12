@@ -5,33 +5,46 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import {addToCart} from "../../stores/action/addCart";
+import {Messaege} from "../../helper/Message";
+import {products} from "../../stores/thunk/index";
 
 const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
-  function getStocks() {
-    getAllStocks(`search=${search}`).then((res) => {
-      var tempList = [];
-      tempList = res?.data?.data;
-      console.log("List Data => ", tempList);
-      setData(tempList);
-    });
+
+  const getAllProducts = async () => {
+    try {
+
+      if(search){
+        const result = await dispatch(products.getAllProducts({name: search}))
+        if(result.payload?.data?.data){
+            setData(result.payload.data.data)
+          return
+        }
+
+        throw {message: 'Not found'}
+      }
+
+      const result = await dispatch(products.getAllProducts())
+        if(result.payload?.data?.data){
+            setData(result.payload.data.data)
+            return
+        }
+        throw {message: 'Not found'}
+    } catch (e) {
+      Messaege("Error", e.message, "error");
+    }
   }
+
   useEffect(() => {
-    getStocks();
+    getAllProducts();
   }, []);
-  const distpatchCart = (id) => {
-    router.push(`/items/orders/${id}`);
-  };
-  const toEditPage = (id) => {
-    router.push(`/items/stock/${id}`);
-  };
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      // Call the function to perform the search here
-      getStocks();
+      getAllProducts();
     }
   };
   return (
@@ -83,15 +96,15 @@ const Page = () => {
                   <tr key={index}>
                     <td>{item.name}</td>
                     <td>{item.category}</td>
-                    <td>{item.qty}</td>
+                    <td>{item.stock}</td>
                     <td>{item.uom}</td>
                     <td>
                       <span
                         className={`badge ${
-                          item.qty > 0 ? "badge-success" : "badge-error"
+                          item.stock > 0 ? "badge-success" : "badge-error"
                         }`}
                       >
-                        {item.status}
+                        {item.stock > 0 ? "Available" : "out of stock"}
                       </span>
                     </td>
                     {localStorage.getItem("role") == "admin" ? (

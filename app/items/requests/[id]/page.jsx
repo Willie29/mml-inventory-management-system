@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { updateStock } from "../../../api";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { Messaege } from "@/app/helper/Message";
+import { Messaege } from "../../../helper/Message";
 
 const Page = () => {
   const router = useRouter();

@@ -1,6 +1,5 @@
 "use client";
 import {Messaege} from "../../../../helper/Message";
-import {postOrder} from "../../../../api";
 import {useEffect, useState} from "react";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";

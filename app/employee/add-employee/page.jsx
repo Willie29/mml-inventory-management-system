@@ -1,12 +1,14 @@
 "use client"
-import { register } from "../../api";
 import Layouts from "../../components/layouts";
 import { useState } from "react";
 import { Messaege } from "../../helper/Message";
 import {useRouter} from "next/navigation";
+import {useDispatch} from "react-redux";
+import {users} from "../../stores/thunk";
 
 const Employee = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -19,7 +21,7 @@ const Employee = () => {
 
   const PostEmployee = async () => {
     try {
-      const response = await register({
+      const response = await dispatch(users.registerUser({
         firstName,
         lastName,
         phone,
@@ -28,14 +30,13 @@ const Employee = () => {
         password,
         position,
         role,
-      });
+      }));
       Messaege("Succes", "Success submitted", "success");
+
       setTimeout(() => {
         router.push("/employee");
       }, 2000);
-      console.log(response);
     } catch (error) {
-      console.log(error);
       Messaege("Failed", `failed submiited`, "error");
     }
   };
@@ -111,10 +112,6 @@ const Employee = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {/* <div className="mt-1">
-                                <label htmlFor="">Photos</label>
-                                <input type="file" className="form-control input-stock" />
-                            </div> */}
 
               <button type="button" onClick={PostEmployee} className="mt-5 input-stock-btn">
                 Submit

@@ -4,10 +4,16 @@ import API from "../../config/";
 
 const getAllProducts = createAsyncThunk(
     'products/getProducts',
-    async (filter) => {
+    async (payload) => {
         try {
-            if(filter)
-                return await axios.get(`${API.API_URL}/products?filter=${filter}`)
+            if(payload?.filter){
+                return await axios.get(`${API.API_URL}/products?filter=${payload?.filter}`)
+            }
+
+            if(payload?.name){
+                return await axios.get(`${API.API_URL}/products?name=${payload?.name}`)
+            }
+
             return await axios.get(`${API.API_URL}/products`)
         } catch (e) {
             return e
@@ -15,6 +21,18 @@ const getAllProducts = createAsyncThunk(
     }
 )
 
+const getProducyById = createAsyncThunk(
+    'products/getProductById',
+    async (id) => {
+        try {
+            return await axios.get(`${API.API_URL}/products/detail/${id}`)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
 export {
-    getAllProducts
+    getAllProducts,
+    getProducyById
 }
