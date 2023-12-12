@@ -133,7 +133,7 @@ class Controller {
             }
 
             const order = await Order.update({
-                orderStatus: 'accepted',
+                orderStatus: 'confirmed',
                 confirmTime: new Date()
             }, {
                 where: {
