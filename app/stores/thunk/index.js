@@ -1,9 +1,6 @@
-import * as orders from './orders'
-import * as products from './products'
-import * as requests from './requests'
+import * as orders from "./orders";
+import * as products from "./products";
+import * as requests from "./requests";
+import * as locations from "./locations";
 
-export {
-    orders,
-    products,
-    requests
-}
+export { orders, products, requests, locations };

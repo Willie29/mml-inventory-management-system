@@ -1,30 +1,32 @@
-import {createAsyncThunk} from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../config";
 import axios from "axios";
 
 const getRequestByUser = createAsyncThunk(
-    'requests/getRequestByUser',
-    async (user_id) => {
-        try {
-            return await axios.get(`${API.API_URL}/requests/user/${user_id}`)
-        } catch (e) {
-            return e
-        }
+  "requests/getRequestByUser",
+  async (user_id) => {
+    try {
+      return await axios.get(`${API.API_URL}/requests/user/${user_id}`);
+    } catch (e) {
+      return e;
     }
-)
+  }
+);
 
-const getAllRequests = createAsyncThunk(
-    'requests/getAllRequests',
-    async () => {
-        try {
-            return await axios.get(`${API.API_URL}/requests`)
-        } catch (e) {
-            return e
-        }
-    }
-)
+const getAllRequests = createAsyncThunk("requests/getAllRequests", async () => {
+  try {
+    return await axios.get(`${API.API_URL}/requests`);
+  } catch (e) {
+    return e;
+  }
+});
 
-export {
-    getRequestByUser,
-    getAllRequests
-}
+const addRequest = createAsyncThunk("requests/addRequest", async (data) => {
+  try {
+    return await axios.post(`${API.API_URL}/requests`, data);
+  } catch (e) {
+    return e;
+  }
+});
+
+export { getRequestByUser, getAllRequests, addRequest };
