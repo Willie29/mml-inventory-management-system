@@ -1,5 +1,6 @@
 const {Order, Product, Location, User, History, Cart} = require('../models')
 const response = require('../helpers/response')
+const {Op} = require("sequelize");
 
 class Controller {
     static async createOrder(req, res, next) {
@@ -18,7 +19,18 @@ class Controller {
 
     static async getAllOrders(req, res, next) {
         try {
+            const {name} = req.query
+            let where = {}
+            if(name){
+                where = {
+                    applicantStaff: {
+                        [Op.like]: `%${name}%`
+                    }
+                }
+            }
+
             const order = await Order.findAll({
+                where,
                 include: [{
                     model: Product,
                 }, {
@@ -101,11 +113,16 @@ class Controller {
                 throw {message: 'Order already accepted'}
             }
 
-            const order = await Order.update(req.body, {
+            const order = await Order.update({
+                orderStatus: 'accepted',
+                confirmTime: new Date()
+            }, {
                 where: {
                     id: findOrder.id
                 }
             })
+
+            console.log(findOrder.Carts)
 
             findOrder.Carts.forEach(async (cart) => {
                 const product = await Product.update({

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             Cart.belongsTo(models.Product, {
                 foreignKey: "ProductId",
             })
-                Cart.belongsTo(models.Order, {
+            Cart.belongsTo(models.Order, {
                 foreignKey: "OrderId",
             })
         }

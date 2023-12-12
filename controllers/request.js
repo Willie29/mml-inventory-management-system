@@ -1,5 +1,6 @@
 const {Product, Location, History, Request} = require('../models');
 const response = require('../helpers/response');
+const {Op} = require("sequelize");
 
 class Controller {
     static async getAllRequestByUser(req, res, next) {
@@ -7,8 +8,7 @@ class Controller {
             const products = await Request.findAll({
                 where: {
                     UserId: req.params.id
-                },
-                include: [{
+                }, include: [{
                     model: Location, // Menghubungkan dengan model Location
                     attributes: ['id', 'name'] // Attribut dari model Location yang ingin di-include
                 }]
@@ -22,21 +22,27 @@ class Controller {
 
     static async getAllRequests(req, res, next) {
         try {
-            const products = await Request.findAll({
-                include: [
-                    {
-                        model: Location, // Menghubungkan dengan model Location
-                        attributes: ['id', 'name'] // Attribut dari model Location yang ingin di-include
-                    },
-                    {
-                        model: Product,
-                        attributes: ['id', 'name', 'stock', 'category']
-                    }
-                ]
-            });
+            const {name} = req.query; // Assuming the search parameters are passed in the query string
 
+            // Build the query object based on the existence of search parameters
+            const query = {
+                include: [{
+                    model: Location, attributes: ['id', 'name']
+                }, {
+                    model: Product, attributes: ['id', 'name', 'stock', 'category']
+                }]
+            };
+
+            if (name) {
+                query.include[1].where = {
+                    name: {[Op.like]: `%${name}%`} // Searching product by name
+                };
+            }
+
+            const products = await Request.findAll(query);
             return response.successResponse(res, products, 'Request retrieved successfully');
         } catch (err) {
+            console.log(err)
             next(err);
         }
     }
@@ -63,9 +69,7 @@ class Controller {
 
             const updatedRequest = await request.update(req.body);
             await History.create({
-                log_type: 'Update Request',
-                UserId: req.user.id,
-                RequestId: updatedRequest.id
+                log_type: 'Update Request', UserId: req.user.id, RequestId: updatedRequest.id
             });
 
             return response.successResponse(res, updatedRequest, 'Request updated successfully');

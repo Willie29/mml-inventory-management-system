@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
 
     Location.init({
         name: DataTypes.STRING,
-        uom: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Location',

@@ -5,17 +5,24 @@ const {Op} = require("sequelize");
 class Controller {
     static async read(req, res, next) {
         try {
-            const {filter} = req.query
-            if (filter) {
-                const product = await Product.findAll({
-                    where: {
-                        stock: filter === 'zero' ? {[Op.lt]: 1} : {[Op.gt]: 1}
+            const {filter, name} = req.query
+            let where = {}
+            if (name) {
+                where = {
+                    name: {
+                        [Op.like]: `%${name}%`
                     }
-                })
-                return response.successResponse(res, product, 'Success get data')
+                }
             }
+            if (filter) {
+                where = {
+                    stock: filter === 'zero' ? {[Op.lt]: 1} : {[Op.gt]: 1}
+                }
+            }
+
             const product = await Product.findAll({
-                include: [Location]
+                include: [Location],
+                where
             })
             return response.successResponse(res, product, 'Success get data')
         } catch (error) {
@@ -52,7 +59,7 @@ class Controller {
             let {id} = req.params
             const query = req.query
 
-            if(query.name){
+            if (query.name) {
                 const data = await Product.findOne({
                     where: {
                         name: {
