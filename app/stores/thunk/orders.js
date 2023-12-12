@@ -24,7 +24,43 @@ const getAllOrders = createAsyncThunk(
     }
 )
 
+const getOrderDetailByUser = createAsyncThunk(
+    'orders/getOrderDetailByUser',
+    async (user_id) => {
+        try {
+            return await axios.get(`${API.API_URL}/orders/detail/user/${user_id}`)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
+const updateOrder = createAsyncThunk(
+    'orders/updateOrder',
+    async (payload) => {
+        try {
+            return await axios.put(`${API.API_URL}/orders/${payload.id}`, payload.data)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
+const confirmOrder = createAsyncThunk(
+    'orders/confirmOrder',
+    async (payload) => {
+        try {
+            return await axios.get(`${API.API_URL}/orders/confirm/${payload}`)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
 export {
     getOrdersByUser,
-    getAllOrders
+    getAllOrders,
+    getOrderDetailByUser,
+    confirmOrder,
+    updateOrder
 }
