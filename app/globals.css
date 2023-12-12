@@ -1,0 +1,303 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700;1,900&display=swap");
+
+:root {
+  --mml-primary-color: #014f88;
+  --mml-white-color: #d9d9d9;
+}
+
+body,
+html {
+  margin: 0 auto;
+  padding: 0;
+  background: #d9d9d9 !important;
+  font-family: "Roboto", sans-serif !important;
+  color: black !important;
+  font-size: 14px;
+}
+
+.container {
+  margin: 0 auto;
+  width: 800px;
+}
+
+.loginPage {
+  margin: 5rem auto;
+  width: 500px;
+}
+
+.loginPage img {
+  margin: 0 auto 32px auto;
+  display: block;
+  width: 200px;
+  height: auto;
+}
+
+.boxLogin {
+  background-color: var(--mml-primary-color);
+  padding: 22px;
+  border-radius: 10px;
+}
+
+.boxLogin label {
+  text-transform: capitalize;
+  display: inline-block;
+  width: 20%;
+  margin: 12px 8px 12px 0;
+  text-align: right;
+}
+
+.boxLogin .form-control {
+  width: 75%;
+  display: inline-block;
+  height: 32px;
+}
+
+.boxLogin button {
+  margin: 3rem auto;
+  text-align: center;
+  display: block;
+  background-color: var(--mml-white-color);
+  border-radius: 40px;
+  padding: 4px 2rem;
+}
+
+.boxLogin button:hover {
+  background-color: beige;
+}
+
+.navbar {
+  background-color: var(--mml-primary-color);
+  padding: 20px !important;
+  display: block;
+  width: 100%;
+}
+
+.navbar img {
+  width: 178px;
+  height: auto;
+}
+
+.navbar a {
+  color: var(--mml-white-color);
+  float: right;
+}
+
+.layout {
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 15% 80%;
+}
+
+.sidebar {
+  min-height: 100vh;
+  background-color: white;
+  padding: 22px;
+}
+
+.sidebar h3 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sidebar ul {
+  /* list-style: none; */
+  padding-left: 0;
+}
+
+.sidebar ul li {
+  list-style: none;
+  padding: 8px 3px;
+  margin: 2px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--mml-primary-color);
+}
+
+.sidebar .left {
+  float: left;
+  margin-right: 8px;
+}
+
+.sidebar .right {
+  float: right;
+}
+
+.sidebar ul li ul li {
+  display: block;
+  border-bottom: none;
+  padding: 4px 3px 2px 0;
+}
+
+.sidebar span {
+  display: block;
+  color: black;
+}
+
+.sidebar a {
+  text-decoration: none;
+  display: block;
+  color: black;
+}
+
+.konten {
+  padding: 22px;
+  vertical-align: top;
+}
+
+.konten h1 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.konten h2 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.konten p {
+  font-size: 16px;
+}
+
+.konten .card {
+  background-color: var(--mml-primary-color);
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+}
+
+.mt-1 {
+  margin-top: 2px;
+}
+
+.mt-2 {
+  margin-top: 4px;
+}
+
+.mt-3 {
+  margin-top: 6px;
+}
+
+.mt-4 {
+  margin-top: 8px;
+}
+
+.mt-5 {
+  margin-top: 10px;
+}
+
+.mr-3 {
+  margin-right: 6px;
+}
+
+.filter-table {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-table .search {
+  background: none;
+  border: 1px solid #0490be;
+  color: white;
+  font-size: 16px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-stock {
+  background-color: #aeaeae;
+  height: 51px;
+  padding: 0 12px;
+}
+
+.input-order {
+  background-color: #aeaeae;
+  height: 21px;
+  padding: 0 12px;
+  width: 300px;
+}
+
+.input-stock-btn {
+  background-color: #53cc58;
+  font-weight: bold;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  height: 32px;
+  font-size: 18px;
+}
+
+table {
+  width: 100%;
+}
+
+table thead th {
+  background-color: none;
+  font-size: 18px;
+  text-align: center;
+}
+
+table tbody tr {
+  border-bottom: 1px solid var(--mml-primary-color);
+}
+
+table tbody td {
+  background-color: grey;
+  font-size: 18px;
+  text-align: center;
+  color: black;
+  padding: 16px 0;
+  font-weight: bold;
+}
+
+table a {
+  background-color: #0490be;
+  color: black;
+  padding: 6px 8px;
+  text-decoration: none !important;
+  font-weight: bold;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+table .badge {
+  padding: 4px 6px;
+  border-radius: 8px;
+  color: black;
+  font-size: 18px;
+}
+
+table .badge-success {
+  background-color: #68FF6E;
+}
+
+table .badge-error {
+  background-color: #ED222B;
+}
+
+table .badge-primary {
+  background-color: blue;
+}
+
+table .badge-disabled {
+  background-color: #707070;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pagination span .footer {
+  clear: both;
+  position: relative;
+  padding: 22px;
+  /* margin-top: -200px; */
+  background-color: var(--mml-primary-color);
+}
