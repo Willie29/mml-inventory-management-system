@@ -17,9 +17,9 @@ const Requestsnpm = () => {
 
     const getAllRequest = async () => {
         try {
-            if(search){
+            if (search) {
                 const resultRequets = await dispatch(requests.getAllRequests(search))
-                if(resultRequets.payload?.data){
+                if (resultRequets.payload?.data) {
                     setDataRequest(resultRequets.payload.data.data)
                     return
                 }
@@ -27,7 +27,7 @@ const Requestsnpm = () => {
             }
 
             const resultRequets = await dispatch(requests.getAllRequests())
-            if(resultRequets.payload?.data?.data){
+            if (resultRequets.payload?.data?.data) {
                 setDataRequest(resultRequets.payload.data.data)
             }
         } catch (error) {
@@ -54,22 +54,22 @@ const Requestsnpm = () => {
     }
 
     return (<Layouts>
-            <div className="container">
-                <div>
-                    <h1>Requested Items</h1>
-                    {localStorage.getItem("role") == "admin" ? (<></>) : (<div style={{width: "500px"}}>
-                            <button
-                                type="button"
-                                onClick={postRequest}
-                                className="mb-3 mt-2 input-stock-btn"
-                            >
-                                Add Request
-                            </button>
-                        </div>)}
-                    <div className="card">
-                        <h5>List of Requested Items</h5>
+        <div className="container">
+            <div>
+                <h1>Requested Items</h1>
+                {localStorage.getItem("role") == "admin" ? (<></>) : (<div style={{width: "500px"}}>
+                    <button
+                        type="button"
+                        onClick={postRequest}
+                        className="mb-3 mt-2 input-stock-btn"
+                    >
+                        Add Request
+                    </button>
+                </div>)}
+                <div className="card">
+                    <h5>List of Requested Items</h5>
 
-                        <div className="filter-table">
+                    <div className="filter-table">
               <span>
                 <label htmlFor="" className="mr-3">
                   Show
@@ -80,7 +80,7 @@ const Requestsnpm = () => {
                 </select>
                 entries
               </span>
-                            <span>
+                        <span>
                 <label htmlFor="" className="mr-3">
                   Search
                 </label>
@@ -91,58 +91,64 @@ const Requestsnpm = () => {
                     onKeyPress={handleKeyPress}
                 />
               </span>
-                        </div>
+                    </div>
 
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Name Of The Product</th>
-                                <th>Category</th>
-                                <th>Quantity</th>
-                                <th>UOM</th>
-                                <th>Location</th>
-                                {localStorage.getItem("role") == "admin" ? (<></>) : (<th>Status</th>)}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {dataRequest?.map((item, index) => (<tr key={index}>
-                                    <td>{item?.Product?.name}</td>
-                                    <td>{item?.Product?.category}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>{item.uom}</td>
-                                    <td>{item?.Location?.name}</td>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Name Of The Product</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>UOM</th>
+                            <th>Location</th>
+                            {localStorage.getItem('role') !== 'admin' && <th>Requested Date</th>}
+                            {localStorage.getItem("role") === "admin" ? (<th>action</th>) : (<th>Status</th>)}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {dataRequest?.map((item, index) => (<tr key={index}>
+                            <td>{item?.Product?.name}</td>
+                            <td>{item?.Product?.category}</td>
+                            <td>{item.quantity}</td>
+                            <td>{item.uom}</td>
+                            <td>{item?.Location?.name}</td>
+                            {localStorage.getItem('role') !== 'admin' &&
+                                <td>{moment(item?.createdAt).format('MMMM YYYY DD')}</td>}
 
-                                    {localStorage.getItem("role") == "admin" ? (<></>) : (<td>
-                        <span
-                            className={`${item.status == "out_stock" ? "badge badge-error" : "badge badge-success"}`}
-                        >
-                          {item.status}
-                        </span>
-                                        </td>)}
+                            {localStorage.getItem("role") !== "admin" && (
+                                <td>
+                                    <span
+                                        className={`${item.status === "pending" ? "badge badge-error" : "badge badge-success"}`}
+                                    >
+                                      {item.status}
+                                    </span>
+                                </td>
+                            )}
 
-                                    {localStorage.getItem("role") == "admin" ? (<td onClick={() => toEditPage(item.id)}>
-                        <span
-                            className="badge badge-primary"
-                            style={{color: "white", cursor: "pointer"}}
-                        >
-                          Add Stock
-                        </span>
-                                        </td>) : (<></>)}
-                                </tr>))}
-                            </tbody>
-                        </table>
+                            {localStorage.getItem("role") === "admin" && (<td onClick={() => toEditPage(item.id)}>
+                                <button
+                                    className="badge btn btn-primary badge-primary"
+                                    disabled={item.status === "available"}
+                                    style={{color: "white", cursor: "pointer"}}
+                                >
+                                  Add Stock
+                                </button>
+                            </td>)}
+                        </tr>))}
+                        </tbody>
+                    </table>
 
-                        <div className="mt-2 pagination">
-                            <span>Showing 1 to 2 out of 2 entries</span>
-                            <span>
+                    <div className="mt-2 pagination">
+                        <span>Showing 1 to 2 out of 2 entries</span>
+                        <span>
                 <button type="button">Previous</button>
                 <button type="button">Next</button>
               </span>
-                        </div>
                     </div>
                 </div>
             </div>
-        </Layouts>);
+        </div>
+    </Layouts>);
 };
 
 export default Requestsnpm;

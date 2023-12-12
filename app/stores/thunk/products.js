@@ -32,7 +32,20 @@ const getProducyById = createAsyncThunk(
     }
 )
 
+const updateProduct = createAsyncThunk(
+    'products/updateProduct',
+    async (payload) => {
+        try {
+            console.log(payload)
+            return await axios.put(`${API.API_URL}/products/update/${payload.id}`, payload.data)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
 export {
     getAllProducts,
-    getProducyById
+    getProducyById,
+    updateProduct
 }

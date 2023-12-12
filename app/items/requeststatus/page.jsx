@@ -3,26 +3,36 @@ import { getAllStocks } from "../../api";
 import Layouts from "../../components/layouts";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import {Messaege} from "../../helper/Message";
+import {useDispatch} from "react-redux";
+import {requests} from "../../stores/thunk";
 
 const Requestsnpm = () => {
-  const [data2, setData2] = useState([]);
   const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const [dataRequest, setDataRequest] = useState([])
 
-  function getStocks() {
-    getAllStocks(`search=${search}`).then((res) => {
-      var tempList = [];
-      tempList = res?.data?.data;
-      console.log("List Data => ", tempList);
-      setData2(tempList);
-    });
+  const getRequestByUser = async () => {
+    try {
+
+
+
+      const result = await dispatch(requests.getRequestByUser(localStorage.getItem('iduser')))
+        if(result.payload?.data?.data){
+          setDataRequest(result.payload.data.data)
+            return
+        }
+    } catch (e) {
+      Messaege("Error", e.message, "error");
+    }
   }
   useEffect(() => {
-    getStocks();
+    getRequestByUser();
   }, []);
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       // Call the function to perform the search here
-      getStocks();
+      getRequestByUser();
     }
   };
   return (
@@ -71,11 +81,11 @@ const Requestsnpm = () => {
                 </tr>
               </thead>
               <tbody>
-                {data2?.map((item, index) => (
+                {dataRequest?.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.name}</td>
-                    <td>{item.category}</td>
-                    <td>{item.qty}</td>
+                    <td>{item?.Product.name}</td>
+                    <td>{item?.Product?.category}</td>
+                    <td>{item.quantity}</td>
                     <td>{item.uom}</td>
 
                     <td>{moment(item.createdAt).format("MMMM Do YYYY")}</td>
@@ -83,7 +93,7 @@ const Requestsnpm = () => {
                         <td>
                             <span
                                 className={`${
-                                    item.status == "out_stock"
+                                    item.status === "pending"
                                         ? "badge badge-error"
                                         : "badge badge-success"
                                 }`}
