@@ -6,6 +6,7 @@ import moment from "moment";
 import {useRouter} from "next/navigation";
 import {useDispatch} from "react-redux";
 import {orders, products, requests} from "../stores/thunk";
+import Link from "next/link";
 
 const Page = () => {
     const router = useRouter();
@@ -113,7 +114,7 @@ const Page = () => {
                             <td>{item.applicantStaff}</td>
                             <td>{moment(item.requestDate).format("MMMM Do YYYY")}</td>
                             <td>{item.Location?.name}</td>
-                            <td>{item.status == "pending" ? "-" : moment(item.updatedAT).format("MMMM DD YYYY")}</td>
+                            <td>{item.orderStatus == "pending" ? "-" : moment(item.confirmTime).format("MMMM DD YYYY")}</td>
                             {localStorage.getItem("role") == "admin" ? (<></>) : (<td>
                                     <span
                                         className={`${item.status == "pending" ? "badge badge-error" : "badge badge-success"}`}
@@ -122,13 +123,13 @@ const Page = () => {
                                 </span>
                             </td>)}
                             <td>
-                      <span
+                      <Link href={`/items/orders/detail/${item.id}`}
                           className="badge badge-primary"
                           style={{color: "white", cursor: "pointer"}}
                           onClick={toEditPage2}
                       >
                         More info
-                      </span>
+                      </Link>
                             </td>
                         </tr>))}
                         </tbody>
