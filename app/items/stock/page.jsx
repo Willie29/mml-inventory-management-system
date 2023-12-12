@@ -109,13 +109,15 @@ const Page = () => {
                       </span>
                     </td>
                     {localStorage.getItem("role") === "admin" ? (
-                      <td onClick={() => toEditPage(item.id)}>
-                        <span
-                          className="badge badge-primary"
-                          style={{ color: "white", cursor: "pointer" }}
-                        >
-                          Edit Stock
-                        </span>
+                      <td>
+                        <Link href={`items/stock/${id}`}>
+                            <span
+                                className="badge badge-primary"
+                                style={{ color: "white", cursor: "pointer" }}
+                            >
+                                Order Item
+                            </span>
+                        </Link>
                       </td>
                     ) : (
                       <td>
