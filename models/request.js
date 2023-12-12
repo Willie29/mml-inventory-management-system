@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             })
             Request.belongsTo(models.Product, {
                 foreignKey: "ProductId"
-            }),
+            })
             Request.belongsTo(models.Location, {
                 foreignKey: "LocationId"
             })
