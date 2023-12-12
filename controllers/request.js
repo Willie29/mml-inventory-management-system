@@ -1,4 +1,4 @@
-const {Product, Location, History, Request} = require('../models');
+const {Product, Location, History, Request, User} = require('../models');
 const response = require('../helpers/response');
 const {Op} = require("sequelize");
 
@@ -8,10 +8,19 @@ class Controller {
             const products = await Request.findAll({
                 where: {
                     UserId: req.params.id
-                }, include: [{
-                    model: Location, // Menghubungkan dengan model Location
-                    attributes: ['id', 'name'] // Attribut dari model Location yang ingin di-include
-                }]
+                }, include: [
+                    {
+                        model: Location, // Menghubungkan dengan model Location
+                        attributes: ['id', 'name'] // Attribut dari model Location yang ingin di-include
+                    },
+                    {
+                        model: Product, // Menghubungkan dengan model Product
+                        attributes: ['id', 'name', 'stock', 'category'] // Attribut dari model Product yang ingin di-include
+                    },
+                    {
+                        model: User, // Menghubungkan dengan model User
+                    }
+                ]
             });
 
             return response.successResponse(res, products, 'Request retrieved successfully');
@@ -22,24 +31,27 @@ class Controller {
 
     static async getAllRequests(req, res, next) {
         try {
-            const {name} = req.query; // Assuming the search parameters are passed in the query string
+            const {user_id} = req.query; // Assuming the search parameters are passed in the query string
 
             // Build the query object based on the existence of search parameters
-            const query = {
+            const options = {
                 include: [{
                     model: Location, attributes: ['id', 'name']
                 }, {
                     model: Product, attributes: ['id', 'name', 'stock', 'category']
+                }, {
+                    model: User
                 }]
             };
 
-            if (name) {
-                query.include[1].where = {
-                    name: {[Op.like]: `%${name}%`} // Searching product by name
+
+            if (user_id) {
+                options.where = {
+                    UserId: {[Op.like]: `%${user_id}%`} // Searching product by name
                 };
             }
 
-            const products = await Request.findAll(query);
+            const products = await Request.findAll(options);
             return response.successResponse(res, products, 'Request retrieved successfully');
         } catch (err) {
             console.log(err)
