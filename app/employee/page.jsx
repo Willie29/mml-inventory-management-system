@@ -1,32 +1,53 @@
 "use client"
 import { useEffect, useState } from "react";
 import Layouts from "../components/layouts";
-import { getEmployee } from "../api";
+import {useDispatch} from "react-redux";
+import {Messaege} from "../helper/Message";
+import {users} from "../stores/thunk";
 
 const Employee = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
 
-  function getAllEmployee() {
-    getEmployee().then((res) => {
-      var tempList = [];
-      tempList = res.data.data;
-      console.log("List Data => ", tempList);
-      setData(tempList);
-    });
+  const getAllEmployee = async () => {
+    try {
+
+      if(search) {
+        const employee = await dispatch(users.getAllUser({
+          role: 'employee',
+          name: search
+        }))
+        console.log(employee)
+
+        if(employee?.payload?.data) {
+          setData(employee.payload.data.data)
+          return
+        }
+        throw {message: 'Not Found'}
+      }
+
+      const employee = await dispatch(users.getAllUser({
+        role: 'employee'
+      }))
+
+      if(employee?.payload?.data) {
+        setData(employee.payload.data.data)
+      }
+
+    } catch (error) {
+      Messaege('Error', error.message, "error");
+    }
   }
+
+
   useEffect(() => {
     getAllEmployee();
   }, []);
 
   const handleSearch = (e) => {
     if (e.key === "Enter") {
-      getEmployee(`search=${search}`).then((res) => {
-        var tempList = [];
-        tempList = res.data.data;
-        console.log("List Data => ", tempList);
-        setData(tempList);
-      });
+      getAllEmployee();
     }
   }
 
@@ -66,7 +87,7 @@ const Employee = () => {
               {data?.map((item, index) => (
                   <tr key={index}>
                   <td>{item.firstName} {item.lastName}</td>
-                  <td>{item.phone}</td>
+                  <td>{item?.phone}</td>
                   <td>{item.position}</td>
                   </tr>
                 ))}

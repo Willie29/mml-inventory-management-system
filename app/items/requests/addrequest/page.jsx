@@ -1,6 +1,8 @@
 "use client";
-import Layouts from "../../../components/layouts";
 import { useEffect, useState } from "react";
+import { postStoks, register } from "../../../api";
+import Layouts from "../../../components/layouts";
+import Link from "next/link";
 import { Messaege } from "../../../helper/Message";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";

@@ -1,5 +1,5 @@
 "use client";
-import { getAllStocks } from "@/app/api";
+import { getAllStocks } from "../../api";
 import Layouts from "../../components/layouts";
 import { useEffect, useState } from "react";
 import moment from "moment";
@@ -65,9 +65,7 @@ const Requestsnpm = () => {
                   <th>Quantity</th>
                   <th>UOM</th>
                   <th>Request Date</th>
-                  {localStorage.getItem("role") == "admin" ? (
-                    <></>
-                  ) : (
+                  {localStorage.getItem("role") !== "admin" && (
                     <th>Status</th>
                   )}
                 </tr>
@@ -81,20 +79,18 @@ const Requestsnpm = () => {
                     <td>{item.uom}</td>
 
                     <td>{moment(item.createdAt).format("MMMM Do YYYY")}</td>
-                    {localStorage.getItem("role") == "admin" ? (
-                      <></>
-                    ) : (
-                      <td>
-                        <span
-                          className={`${
-                            item.status == "out_stock"
-                              ? "badge badge-error"
-                              : "badge badge-success"
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
+                    {localStorage.getItem("role") !== "admin" && (
+                        <td>
+                            <span
+                                className={`${
+                                    item.status == "out_stock"
+                                        ? "badge badge-error"
+                                        : "badge badge-success"
+                                }`}
+                            >
+                              {item.status}
+                            </span>
+                        </td>
                     )}
                   </tr>
                 ))}

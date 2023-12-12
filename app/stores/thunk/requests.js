@@ -13,14 +13,6 @@ const getRequestByUser = createAsyncThunk(
   }
 );
 
-const getAllRequests = createAsyncThunk("requests/getAllRequests", async () => {
-  try {
-    return await axios.get(`${API.API_URL}/requests`);
-  } catch (e) {
-    return e;
-  }
-});
-
 const addRequest = createAsyncThunk("requests/addRequest", async (data) => {
   try {
     return await axios.post(`${API.API_URL}/requests`, data);
@@ -28,5 +20,25 @@ const addRequest = createAsyncThunk("requests/addRequest", async (data) => {
     return e;
   }
 });
+
+const getAllRequests = createAsyncThunk(
+    'requests/getAllRequests',
+    async (payload) => {
+        try {
+            if(payload?.search){
+                return await axios.get(`${API.API_URL}/requests?name=${payload?.search}`)
+            }
+
+            if(payload?.user){
+                return await axios.get(`${API.API_URL}/requests?user=${payload?.user}`)
+            }
+
+            return await axios.get(`${API.API_URL}/requests`)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
 
 export { getRequestByUser, getAllRequests, addRequest };
