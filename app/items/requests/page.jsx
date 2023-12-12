@@ -4,24 +4,40 @@ import Layouts from "../../components/layouts";
 import {useEffect, useState} from "react";
 import moment from "moment";
 import {useRouter} from "next/navigation";
+import {useDispatch} from "react-redux";
+import {Messaege} from "../../helper/Message";
+import {requests} from "../../stores/thunk";
 
 const Requestsnpm = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
 
-    const [data2, setData2] = useState([]);
     const [search, setSearch] = useState("");
+    const [dataRequest, setDataRequest] = useState([])
 
-    function getStocks() {
-        getAllStocks(`search=${search}`).then((res) => {
-            var tempList = [];
-            tempList = res?.data?.data;
-            console.log("List Data => ", tempList);
-            setData2(tempList);
-        });
+    const getAllRequest = async () => {
+        try {
+            if(search){
+                const resultRequets = await dispatch(requests.getAllRequests(search))
+                if(resultRequets.payload?.data){
+                    setDataRequest(resultRequets.payload.data.data)
+                    return
+                }
+                throw {message: "No data found"}
+            }
+
+            const resultRequets = await dispatch(requests.getAllRequests())
+            if(resultRequets.payload?.data?.data){
+                setDataRequest(resultRequets.payload.data.data)
+            }
+        } catch (error) {
+            console.log(error)
+            Messaege('Data Not found', error.message, 'error')
+        }
     }
 
     useEffect(() => {
-        getStocks();
+        getAllRequest();
     }, []);
     const postRequest = async () => {
         router.push("/items/requests/addrequest");
@@ -33,19 +49,15 @@ const Requestsnpm = () => {
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             // Call the function to perform the search here
-            getStocks();
+            getAllRequest();
         }
     }
 
-    return (
-        <Layouts>
+    return (<Layouts>
             <div className="container">
                 <div>
                     <h1>Requested Items</h1>
-                    {localStorage.getItem("role") == "admin" ? (
-                        <></>
-                    ) : (
-                        <div style={{width: "500px"}}>
+                    {localStorage.getItem("role") == "admin" ? (<></>) : (<div style={{width: "500px"}}>
                             <button
                                 type="button"
                                 onClick={postRequest}
@@ -53,8 +65,7 @@ const Requestsnpm = () => {
                             >
                                 Add Request
                             </button>
-                        </div>
-                    )}
+                        </div>)}
                     <div className="card">
                         <h5>List of Requested Items</h5>
 
@@ -90,52 +101,34 @@ const Requestsnpm = () => {
                                 <th>Quantity</th>
                                 <th>UOM</th>
                                 <th>Location</th>
-                                {localStorage.getItem("role") == "admin" ? (
-                                    <></>
-                                ) : (
-                                    <th>Status</th>
-                                )}
+                                {localStorage.getItem("role") == "admin" ? (<></>) : (<th>Status</th>)}
                             </tr>
                             </thead>
                             <tbody>
-                            {data2?.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.name}</td>
-                                    <td>{item.category}</td>
-                                    <td>{item.qty}</td>
+                            {dataRequest?.map((item, index) => (<tr key={index}>
+                                    <td>{item?.Product?.name}</td>
+                                    <td>{item?.Product?.category}</td>
+                                    <td>{item.quantity}</td>
                                     <td>{item.uom}</td>
-                                    <td>{item.location}</td>
+                                    <td>{item?.Location?.name}</td>
 
-                                    {localStorage.getItem("role") == "admin" ? (
-                                        <></>
-                                    ) : (
-                                        <td>
+                                    {localStorage.getItem("role") == "admin" ? (<></>) : (<td>
                         <span
-                            className={`${
-                                item.status == "out_stock"
-                                    ? "badge badge-error"
-                                    : "badge badge-success"
-                            }`}
+                            className={`${item.status == "out_stock" ? "badge badge-error" : "badge badge-success"}`}
                         >
                           {item.status}
                         </span>
-                                        </td>
-                                    )}
+                                        </td>)}
 
-                                    {localStorage.getItem("role") == "admin" ? (
-                                        <td onClick={() => toEditPage(item.id)}>
+                                    {localStorage.getItem("role") == "admin" ? (<td onClick={() => toEditPage(item.id)}>
                         <span
                             className="badge badge-primary"
                             style={{color: "white", cursor: "pointer"}}
                         >
                           Add Stock
                         </span>
-                                        </td>
-                                    ) : (
-                                        <></>
-                                    )}
-                                </tr>
-                            ))}
+                                        </td>) : (<></>)}
+                                </tr>))}
                             </tbody>
                         </table>
 
@@ -149,8 +142,7 @@ const Requestsnpm = () => {
                     </div>
                 </div>
             </div>
-        </Layouts>
-    );
+        </Layouts>);
 };
 
 export default Requestsnpm;

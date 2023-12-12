@@ -257,14 +257,14 @@ table tbody td {
   font-weight: bold;
 }
 
-table a {
-  background-color: #0490be;
-  color: black;
-  padding: 6px 8px;
-  text-decoration: none !important;
-  font-weight: bold;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
+/*table a {*/
+/*  background-color: #0490be;*/
+/*  color: black;*/
+/*  padding: 6px 8px;*/
+/*  text-decoration: none !important;*/
+/*  font-weight: bold;*/
+/*  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);*/
+/*}*/
 
 table .badge {
   padding: 4px 6px;
