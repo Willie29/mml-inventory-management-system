@@ -1,9 +1,9 @@
 "use client";
-import { postStoks, register } from "@/app/api";
+import { postStoks, register } from "../../../../app/api";
 import Layouts from "../../../components/layouts";
 import Link from "next/link";
 import { useState } from "react";
-import { Messaege } from "@/app/helper/Message";
+import { Messaege } from "../../../helper/Message";
 import { useRouter } from "next/navigation";
 
 const Employee = () => {
