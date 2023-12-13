@@ -16,13 +16,17 @@ class Controller {
             }
             if (filter) {
                 where = {
-                    stock: filter === 'zero' ? {[Op.lt]: 1} : {[Op.gt]: 1}
+                    qty: filter === 'zero' ? {[Op.lt]: 1} : {[Op.gt]: 1}
                 }
             }
 
             const product = await Product.findAll({
-                include: [Location],
-                where
+                include: [
+                    {
+                        model: Location,
+                        where
+                    }
+                ]
             })
             return response.successResponse(res, product, 'Success get data')
         } catch (error) {
