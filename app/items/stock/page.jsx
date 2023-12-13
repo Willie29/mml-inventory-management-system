@@ -4,9 +4,9 @@ import { getAllStocks } from "../../api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import {addToCart} from "../../stores/action/addCart";
-import {Messaege} from "../../helper/Message";
-import {products} from "../../stores/thunk/index";
+import { addToCart } from "../../stores/action/addCart";
+import { Messaege } from "../../helper/Message";
+import { products } from "../../stores/thunk/index";
 import Link from "next/link";
 
 const Page = () => {
@@ -17,27 +17,39 @@ const Page = () => {
 
   const getAllProducts = async () => {
     try {
-
-      if(search){
-        const result = await dispatch(products.getAllProducts({name: search}))
-        if(result.payload?.data?.data){
-            setData(result.payload.data.data)
-          return
+      if (search) {
+        const result = await dispatch(
+          products.getAllProducts({ name: search })
+        );
+        if (result.payload?.data?.data) {
+          setData(result.payload.data.data);
+          return;
         }
 
-        throw {message: 'Not found'}
+        throw { message: "Not found" };
       }
 
-      const result = await dispatch(products.getAllProducts())
-        if(result.payload?.data?.data){
-            setData(result.payload.data.data)
-            return
-        }
-        throw {message: 'Not found'}
+      const result = await dispatch(products.getAllProducts());
+      if (result.payload?.data?.data) {
+        const modifiedData = result.payload.data.data.map((product) => {
+          const totalStock = product.Locations.reduce((acc, location) => {
+            return acc + (location.qty || 0);
+          }, 0);
+
+          return {
+            ...product,
+            totalStock,
+          };
+        });
+
+        setData(modifiedData);
+        return;
+      }
+      throw { message: "Not found" };
     } catch (e) {
       Messaege("Error", e.message, "error");
     }
-  }
+  };
 
   useEffect(() => {
     getAllProducts();
@@ -48,6 +60,7 @@ const Page = () => {
       getAllProducts();
     }
   };
+
   return (
     <Layouts>
       <div className="container">
@@ -97,37 +110,37 @@ const Page = () => {
                   <tr key={index}>
                     <td>{item.name}</td>
                     <td>{item.category}</td>
-                    <td>{item.stock}</td>
+                    <td>{item.totalStock}</td>
                     <td>{item.uom}</td>
                     <td>
                       <span
                         className={`badge ${
-                          item.stock > 0 ? "badge-success" : "badge-error"
+                          item.totalStock > 0 ? "badge-success" : "badge-error"
                         }`}
                       >
-                        {item.stock > 0 ? "Available" : "out of stock"}
+                        {item.totalStock > 0 ? "Available" : "out of stock"}
                       </span>
                     </td>
                     {localStorage.getItem("role") === "admin" ? (
                       <td>
                         <Link href={`/items/stock/edit/${item.id}`}>
-                            <span
-                                className="badge badge-primary"
-                                style={{ color: "white", cursor: "pointer" }}
-                            >
-                                Edit Stock
-                            </span>
+                          <span
+                            className="badge badge-primary"
+                            style={{ color: "white", cursor: "pointer" }}
+                          >
+                            Edit Stock
+                          </span>
                         </Link>
                       </td>
                     ) : (
                       <td>
                         <Link href={`/items/orders/${item.id}`}>
-                            <span
-                                className="badge badge-primary"
-                                style={{ color: "white", cursor: "pointer" }}
-                            >
-                                Order Item
-                            </span>
+                          <span
+                            className="badge badge-primary"
+                            style={{ color: "white", cursor: "pointer" }}
+                          >
+                            Order Item
+                          </span>
                         </Link>
                       </td>
                     )}
