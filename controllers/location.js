@@ -42,6 +42,30 @@ class Controller {
         }
     }
 
+    static async updateLocationByProductId(req, res, next) {
+        try {
+            const { id } = req.params;
+
+            const location = await Location.findOne({
+                where: { ProductId: id },
+                include: Product
+            });
+
+
+            if (!location) {
+                throw { message: 'Location not found' };
+            }
+
+            const locationUpdate = await Location.update(req.body, {
+                where: { ProductId: id }
+            });
+
+            return response.successResponse(res, locationUpdate, 'Successfully get location by id');
+        } catch (err) {
+            next(err);
+        }
+    }
+
     static async deleteLocation(req, res, next) {
         try {
             const { id } = req.params;
