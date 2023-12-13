@@ -3,12 +3,7 @@ const response = require('../helpers/response'); // Import helper response
 class Controller {
     static async getAllLocations(req, res, next) {
         try {
-            const locations = await Location.findAll({
-                include: [{
-                    model: Product, // Menghubungkan dengan model Product
-                    attributes: ['id', 'name', 'stock'] // Attribut dari model Product yang ingin di-include
-                }]
-            });
+            const locations = await Location.findAll();
 
             if(!locations) throw { message: 'LocationNotFound' } // Jika lokasi tidak ditemukan, lemparkan error (akan ditangkap oleh middleware error
 

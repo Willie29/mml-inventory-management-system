@@ -58,7 +58,8 @@ class Controller {
                 }, {
                     model: User,
                 }, {
-                    model: Cart
+                    model: Cart,
+                    include: [Product]
                 }]
             })
 
@@ -80,7 +81,15 @@ class Controller {
                 }, {
                     model: User,
                 }, {
-                    model: Cart
+                    model: Cart,
+                    include: [
+                        {
+                            model: Product
+                        },
+                        {
+                            model: Location
+                        }
+                    ]
                 }]
             })
 
@@ -133,15 +142,13 @@ class Controller {
             }
 
             const order = await Order.update({
-                orderStatus: 'accepted',
+                orderStatus: 'confirmed',
                 confirmTime: new Date()
             }, {
                 where: {
                     id: findOrder.id
                 }
             })
-
-            console.log(findOrder.Carts)
 
             findOrder.Carts.forEach(async (cart) => {
                 const product = await Product.update({

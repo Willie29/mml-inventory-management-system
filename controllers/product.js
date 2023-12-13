@@ -130,7 +130,7 @@ class Controller {
             const findOneProduct = await Product.findOne({where: {id: req.params.id}})
             if (!findOneProduct) throw {message: "Product not found"}
 
-            const product = await Product.update({status: req.body.status}, {
+            const product = await Product.update(req.body, {
                 where: {
                     id: req.params.id
                 },

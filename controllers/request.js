@@ -59,6 +59,24 @@ class Controller {
         }
     }
 
+
+    static async getRequestById(req, res, next) {
+        try {
+            const {id} = req.params;
+
+            const request = await Request.findByPk(id, {
+                include: ['Location', 'Product', 'User']
+            });
+            if (!request) {
+                throw {message: 'Request not found', statusCode: 404};
+            }
+
+            return response.successResponse(res, request, 'Request retrieved successfully');
+        } catch (err) {
+            next(err);
+        }
+    }
+
     static async createRequest(req, res, next) {
         try {
             const newRequest = await Request.create({
@@ -75,27 +93,19 @@ class Controller {
             const {id} = req.params;
 
             const request = await Request.findByPk(id);
+
             if (!request) {
-                throw {message: 'Request not found', statusCode: 404};
+                throw {message: 'Request not found', statusCode: 404}
             }
 
             const updatedRequest = await request.update(req.body);
             await History.create({
-                log_type: 'Update Request', UserId: req.user.id, RequestId: updatedRequest.id
+                log_type: 'Update Request', UserId: request?.UserId, RequestId: updatedRequest.id
             });
 
             return response.successResponse(res, updatedRequest, 'Request updated successfully');
         } catch (err) {
             next(err);
-
-            const product = await Product.findByPk(id);
-            if (!product) {
-                return res.status(404).json({message: 'Product not found'});
-            }
-
-            await product.destroy();
-
-            res.json({message: 'Product deleted successfully'});
         }
     }
 
