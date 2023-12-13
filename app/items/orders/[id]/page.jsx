@@ -1,64 +1,73 @@
 "use client";
 import Layouts from "../../../components/layouts";
-import {useRouter} from "next/navigation";
-import {getAllStocks, updateStock} from "../../../api";
+import {useParams, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {addToCart} from "../../../stores/action/addCart";
+import {useDispatch} from "react-redux";
+import {Messaege} from "../../../helper/Message";
+import {locations, products} from "../../../stores/thunk";
+import {addOrder} from "../../../stores/reducer/addOrderSlice";
 
 const Page = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const cartRedux = useSelector((state) => state.addCart.cart);
-    console.log(cartRedux, "test");
-    const [qty, setQty] = useState(0);
+    const params = useParams();
+
+    const [qty, setQty] = useState('');
     const [selectedOption, setSelectedOption] = useState("Mitra Utama");
     const [data, setData] = useState([]);
+    const [locationData, setLocationData] = useState([])
+    const [orderItems, setOrderItems] = useState([])
 
     const handleSelectChange = (event) => {
-        // Get the selected value from the event
         const selectedValue = event.target.value;
 
-        // Update the state with the selected value
-        setSelectedOption(selectedValue);
+        const orderItemsList = [...orderItems]
+        orderItemsList.push({
+            quantity: qty,
+            location: selectedValue,
+            ...data
+        })
 
-        // You can perform any additional actions based on the selected value here
-        console.log("Selected option:", selectedValue);
+        setOrderItems(orderItemsList)
+        setQty('')
     };
+
+    const getAllLocation = async () => {
+        try {
+            const result = await dispatch(locations.getAllLocations())
+            if (result.payload?.data?.data) {
+                setLocationData(result.payload.data.data)
+            }
+        } catch (e) {
+            Messaege("Error", e.message, "error");
+        }
+    }
 
     const addTocart = async () => {
-        dispatch(
-            addToCart({
-                ...cartRedux,
-                qty: qty,
-                location: selectedOption,
-            })
-        );
-        router.push("/items/orders/confirm-order");
+        router.push("/items/orders/confirm-order?type=cart");
     };
 
-    function getStocks() {
-        getAllStocks().then((res) => {
-            let tempList = [];
-            tempList = [...new Set(res?.data?.data)];
-            console.log("List Data => ", tempList);
+    const onAddOrder = () => {
+        dispatch(addOrder(orderItems));
+        router.push("/items/orders/confirm-order?type=order");
+    }
 
-            const unique = [];
-            for (const item of tempList) {
-                const duplicate = unique.find(
-                    (obj) => obj.location === item.location
-                );
-                if (!duplicate) {
-                    unique.push(item);
-                }
+    const getProductById = async () => {
+        try {
+            const product = await dispatch(products.getProducyById(params.id))
+            if (product.payload?.data?.data) {
+                setData(product.payload.data.data)
             }
-            setData(unique);
-        });
+        } catch (e) {
+            Messaege('Error', e.message, 'error')
+        }
     }
 
     useEffect(() => {
-        getStocks();
+        getProductById();
+        getAllLocation()
     }, []);
+
     return (
         <Layouts>
             <div className="container">
@@ -70,26 +79,27 @@ const Page = () => {
                         <input
                             type="number"
                             placeholder="Enter Product Quantity"
+                            value={qty}
                             onChange={(e) => setQty(e.target.value)}
                             className="input-stock"
                         />
-                        <span>
-              <label htmlFor="" className="mr-3" style={{display: "block"}}>
-                Location
-              </label>
-              <select
-                  name="show"
-                  id=""
-                  className="mr-3"
-                  style={{width: "200px", padding: "5px"}}
-                  onChange={handleSelectChange}
-                  value={selectedOption}
-              >
-                {data?.map((item) => (
-                    <option value={item.location} key={item.id}>{item.location}</option>
-                ))}
-              </select>
-            </span>
+                        <div>
+                            <label htmlFor="" className="mr-3" style={{display: "block"}}>
+                                Location
+                            </label>
+                            <select
+                                name="show"
+                                className="mr-3"
+                                style={{width: "200px", padding: "5px"}}
+                                onChange={handleSelectChange}
+                                value={selectedOption}
+                            >
+                                <option selected>Select Location</option>
+                                {locationData?.map((item) => (
+                                    <option value={item.name} key={item.id}>{item.name}</option>
+                                ))}
+                            </select>
+                        </div>
                         <div style={{display: "flex", gap: "20px"}}>
                             <button
                                 type="button"
@@ -100,7 +110,7 @@ const Page = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={addTocart}
+                                onClick={onAddOrder}
                                 className="mt-5 input-stock-btn"
                             >
                                 Order now
@@ -118,13 +128,15 @@ const Page = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>{cartRedux.name}</td>
-                                <td>{cartRedux.category}</td>
-                                <td>{cartRedux.qty}</td>
-                                <td>{cartRedux.uom}</td>
-                                <td>{cartRedux.location}</td>
-                            </tr>
+                                {orderItems?.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{item.name}</td>
+                                        <td>{item.category}</td>
+                                        <td>{item.quantity}</td>
+                                        <td>{item.uom}</td>
+                                        <td>{item.location}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>

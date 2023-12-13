@@ -1,7 +1,6 @@
 'use client';
 
 import {persistStore, persistReducer} from "redux-persist";
-import logger from "redux-logger";
 import storage from "redux-persist/lib/storage";
 
 import rootReducer from "./reducer";

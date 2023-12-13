@@ -2,13 +2,12 @@
 import {Messaege} from "../../../../helper/Message";
 import {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import Layouts from "../../../../components/layouts";
 import moment from "moment";
 import {orders} from "../../../../stores/thunk/index";
 
 const DetailOrder = () => {
-    const cartRedux = useSelector((state) => state.addCart.cart);
     const searchParams = useParams()
     const dispatch = useDispatch();
 
@@ -18,6 +17,7 @@ const DetailOrder = () => {
         (async () => {
             const orderDetail = await dispatch(orders.getOrderByOrderId(searchParams.id))
             if (orderDetail.payload.data) {
+                console.log(orderDetail.payload)
                 setDetailOrder(orderDetail.payload.data.data)
             }
         })()
@@ -100,9 +100,9 @@ const DetailOrder = () => {
                         <tbody>
                         {detailOrder?.Carts?.map((item => (
                             <tr key={item.id}>
-                                <td>Pipa</td>
-                                <td>100</td>
-                                <td>Pcs</td>
+                                <td>{detailOrder?.Product?.category}</td>
+                                <td>{item.quantity}</td>
+                                <td>{detailOrder?.Product?.uom}</td>
                                 <td>{moment(item.requestDate).format('YYYY-MM-DD')}</td>
                                 <td>{detailOrder?.Location?.name}</td>
                             </tr>

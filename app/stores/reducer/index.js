@@ -1,10 +1,8 @@
 'use client';
 
 import { combineReducers } from "redux";
-import addCart from "./addCart";
-import addOrder from "./addOrder";
+import addOrderSlice from "./addOrderSlice";
 
 export default combineReducers({
-  addCart,
-  addOrder
+  [addOrderSlice.name]: addOrderSlice.reducer,
 });

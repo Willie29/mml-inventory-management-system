@@ -217,6 +217,11 @@ html {
   padding: 0 12px;
 }
 
+input::placeholder{
+  color: #dedddd;
+  font-weight: bold;
+}
+
 .input-order {
   background-color: #aeaeae;
   height: 21px;
