@@ -10,10 +10,8 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Product.belongsTo(models.Location, {
-                foreignKey: 'LocationId',
-                targetKey: 'id',
-                sourceKey: 'LocationId',
+            Product.hasMany(models.Location, {
+                foreignKey: 'ProductId',
                 onDelete: 'CASCADE',
                 onUpdate: 'CASCADE'
             })
@@ -25,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
         uom: DataTypes.STRING,
         stock: DataTypes.INTEGER,
         category: DataTypes.STRING,
-        LocationId: DataTypes.INTEGER,
     }, {
         sequelize,
         modelName: 'Product',
