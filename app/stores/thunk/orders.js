@@ -70,11 +70,23 @@ const confirmOrder = createAsyncThunk(
     }
 )
 
+const createOrderByUser = createAsyncThunk(
+    'orders/createOrder',
+    async (payload) => {
+        try {
+            return await axios.post(`${API.API_URL}/orders/user/${payload?.user_id}`, payload?.data)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
 export {
     getOrdersByUser,
     getAllOrders,
     getOrderDetailByUser,
     confirmOrder,
     updateOrder,
-    getOrderByOrderId
+    getOrderByOrderId,
+    createOrderByUser
 }

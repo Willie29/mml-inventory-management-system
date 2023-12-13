@@ -40,5 +40,28 @@ const getAllRequests = createAsyncThunk(
     }
 )
 
+const updateRequest = createAsyncThunk(
+    'requests/updateRequest',
+    async (payload) => {
+        try {
+            console.log(payload)
+            return await axios.put(`${API.API_URL}/requests/${payload.id}`, payload.data)
+        } catch (e) {
+            return e
+        }
+    }
+)
 
-export { getRequestByUser, getAllRequests, addRequest };
+const getRequestById = createAsyncThunk(
+    'requests/getRequestById',
+    async (id) => {
+        try {
+            return await axios.get(`${API.API_URL}/requests/detail/${id}`)
+        } catch (e) {
+            return e
+        }
+    }
+)
+
+
+export { getRequestByUser, getAllRequests, addRequest, updateRequest, getRequestById };
