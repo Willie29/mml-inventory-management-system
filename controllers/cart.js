@@ -3,12 +3,7 @@ const response = require('../helpers/response')
 class Controller {
     static async createCart(req, res, next) {
         try {
-            const order = await Cart.create({
-                UserId: req.params.id,
-                ProductId: req.body.ProductId,
-                quantity: req.body.quantity,
-                uom: req.body.uom
-            })
+            const order = await Cart.create(req.body)
             return response.successResponse(res, order, 'Order created successfully')
         } catch (e) {
             next(e)
@@ -56,6 +51,7 @@ class Controller {
             next(e)
         }
     }
+
 }
 
 module.exports = Controller
