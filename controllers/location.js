@@ -26,28 +26,9 @@ class Controller {
     static async updateLocation(req, res, next) {
         try {
             const { id } = req.params;
-            const { name } = req.body;
-
-            const location = await Location.findByPk(id);
-            if (!location) {
-                throw { message: 'Location not found' };
-            }
-
-            location.name = name;
-            await location.save();
-
-            return response.successResponse(res, location, 'Successfully update location');
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    static async updateLocationByProductId(req, res, next) {
-        try {
-            const { id } = req.params;
 
             const location = await Location.findOne({
-                where: { ProductId: id },
+                where: { id: id, ProductId: req.body.ProductId },
                 include: Product
             });
 
@@ -57,7 +38,7 @@ class Controller {
             }
 
             const locationUpdate = await Location.update(req.body, {
-                where: { ProductId: id }
+                where: { id: location.id }
             });
 
             return response.successResponse(res, locationUpdate, 'Successfully get location by id');
