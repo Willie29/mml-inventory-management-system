@@ -28,7 +28,7 @@ class Controller {
             const { id } = req.params;
 
             const location = await Location.findOne({
-                where: { id: id, ProductId: req.body.ProductId },
+                where: { id: id },
                 include: Product
             });
 
