@@ -31,12 +31,9 @@ class Controller {
 
             const order = await Order.findAll({
                 where,
-                include: [{
-                    model: Product,
-                }, {
-                    model: Location,
-                }, {
-                    model: User,
+                include: ['User', 'Location', 'Product', {
+                    model: Cart,
+                    include: [Location]
                 }]
             })
 
@@ -59,7 +56,7 @@ class Controller {
                     model: User,
                 }, {
                     model: Cart,
-                    include: [Product]
+                    include: [Product, Location]
                 }]
             })
 
@@ -109,7 +106,8 @@ class Controller {
                 }, {
                     model: User,
                 }, {
-                    model: Cart
+                    model: Cart,
+                    include: ['Location']
                 }]
             })
             return response.successResponse(res, order, 'Order fetched successfully')
@@ -126,7 +124,7 @@ class Controller {
                         model: Cart,
                         include: [
                             {
-                                model: Product
+                                model: Location
                             }
                         ]
                     }
@@ -151,11 +149,12 @@ class Controller {
             })
 
             findOrder.Carts.forEach(async (cart) => {
-                const product = await Product.update({
-                    stock: cart.Product.stock - cart.quantity
+
+                const product = await Location.update({
+                    qty: cart.Location.qty - cart.quantity
                 }, {
                     where: {
-                        id: cart.ProductId
+                        id: cart?.LocationId
                     }
                 })
                 if(product[0] === 0) {

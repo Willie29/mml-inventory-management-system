@@ -36,9 +36,9 @@ class Controller {
             // Build the query object based on the existence of search parameters
             const options = {
                 include: [{
-                    model: Location, attributes: ['id', 'name']
+                    model: Location, attributes: ['id', 'name', 'qty']
                 }, {
-                    model: Product, attributes: ['id', 'name', 'stock', 'category']
+                    model: Product, attributes: ['id', 'name', 'category']
                 }, {
                     model: User
                 }]
