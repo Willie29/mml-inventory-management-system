@@ -6,10 +6,18 @@ class Controller {
     static async getAllRequestByUser(req, res, next) {
         try {
 
-            const {status} = req.query;
+            const {status, name_product} = req.query;
 
             const where = {
                 UserId: req.params.id
+            }
+
+            const whereProduct = {}
+
+            if(name_product){
+                whereProduct.name = {
+                    [Op.like]: `%${name_product}%`
+                }
             }
 
             if (status) {
@@ -25,7 +33,8 @@ class Controller {
                     },
                     {
                         model: Product, // Menghubungkan dengan model Product
-                        attributes: ['id', 'name', 'category'] // Attribut dari model Product yang ingin di-include
+                        attributes: ['id', 'name', 'category'], // Attribut dari model Product yang ingin di-include
+                        where: whereProduct
                     },
                     {
                         model: User, // Menghubungkan dengan model User
@@ -41,7 +50,7 @@ class Controller {
 
     static async getAllRequests(req, res, next) {
         try {
-            const {user_id, status} = req.query; // Assuming the search parameters are passed in the query string
+            const {user_id, status, name} = req.query; // Assuming the search parameters are passed in the query string
 
 
             // Build the query object based on the existence of search parameters
@@ -66,6 +75,14 @@ class Controller {
                 options.where = {
                     status: status
                 };
+            }
+
+            if(name){
+                options.include[1].where = {
+                    name: {
+                        [Op.like]: `%${name}%`
+                    }
+                }
             }
 
             const products = await Request.findAll(options);
