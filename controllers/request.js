@@ -5,17 +5,27 @@ const {Op} = require("sequelize");
 class Controller {
     static async getAllRequestByUser(req, res, next) {
         try {
+
+            const {status} = req.query;
+
+            const where = {
+                UserId: req.params.id
+            }
+
+            if (status) {
+                where.status = status
+            }
+
             const products = await Request.findAll({
-                where: {
-                    UserId: req.params.id
-                }, include: [
+                where
+                , include: [
                     {
                         model: Location, // Menghubungkan dengan model Location
                         attributes: ['id', 'name'] // Attribut dari model Location yang ingin di-include
                     },
                     {
                         model: Product, // Menghubungkan dengan model Product
-                        attributes: ['id', 'name', 'stock', 'category'] // Attribut dari model Product yang ingin di-include
+                        attributes: ['id', 'name', 'category'] // Attribut dari model Product yang ingin di-include
                     },
                     {
                         model: User, // Menghubungkan dengan model User
@@ -31,7 +41,8 @@ class Controller {
 
     static async getAllRequests(req, res, next) {
         try {
-            const {user_id} = req.query; // Assuming the search parameters are passed in the query string
+            const {user_id, status} = req.query; // Assuming the search parameters are passed in the query string
+
 
             // Build the query object based on the existence of search parameters
             const options = {
@@ -48,6 +59,12 @@ class Controller {
             if (user_id) {
                 options.where = {
                     UserId: {[Op.like]: `%${user_id}%`} // Searching product by name
+                };
+            }
+
+            if(status){
+                options.where = {
+                    status: status
                 };
             }
 
