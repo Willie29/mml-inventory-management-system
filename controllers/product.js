@@ -6,25 +6,27 @@ class Controller {
     static async read(req, res, next) {
         try {
             const {filter, name} = req.query
-            let where = {}
+            let whereTableLocation = {}
+            let whereTableProduct = {}
             if (name) {
-                where = {
+                whereTableProduct = {
                     name: {
                         [Op.like]: `%${name}%`
                     }
                 }
             }
             if (filter) {
-                where = {
+                whereTableLocation = {
                     qty: filter === 'zero' ? {[Op.lt]: 1} : {[Op.gt]: 1}
                 }
             }
 
             const product = await Product.findAll({
+                where: whereTableProduct,
                 include: [
                     {
                         model: Location,
-                        where
+                        where: whereTableLocation
                     }
                 ]
             })
