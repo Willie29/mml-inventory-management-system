@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const secret = 'rahasia-ya-amnjing'
+const secret = 'mmlsecretcode123'
 const createToken = (payload) => {
     try {
         return jwt.sign(payload, secret, {expiresIn: '24h'})

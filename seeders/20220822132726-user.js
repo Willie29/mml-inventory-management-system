@@ -13,23 +13,23 @@ module.exports = {
          */
         let data = [
             {
-                "username": "admin",
-                "email": "admin@mail.com",
+                "username": "Willyam",
+                "email": "willyam@mail.com",
                 "password": "pass123",
                 "role": "admin",
                 phone: "081234567890",
-                position: "Manager",
-                firstName: "Admin",
-                lastName: "Satu"
+                position: "Stock Manager",
+                firstName: "Willyam",
+                lastName: "Dyanata"
             }, {
-                "username": "kasino",
-                "email": "kasino@mail.com",
+                "username": "Steven",
+                "email": "steven@mail.com",
                 "password": "pass123",
                 "role": "employee",
-                phone: "081234567890",
-                position: "Staff",
-                firstName: "Kasino",
-                lastName: "Indro"
+                phone: "081476649375",
+                position: "Staff Gudang B",
+                firstName: "Steven",
+                lastName: "Setiadi"
             },
         ]
         let salt = bcryptjs.genSaltSync(10)
