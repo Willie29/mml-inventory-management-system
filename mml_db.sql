@@ -108,32 +108,6 @@ CREATE TABLE `Users` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Adding Foreign Key Constraints for table `Carts`
-ALTER TABLE `Carts`
-  ADD CONSTRAINT `fk_Carts_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Carts_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `Products` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Carts_LocationId` FOREIGN KEY (`LocationId`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Carts_OrderId` FOREIGN KEY (`OrderId`) REFERENCES `Orders` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-  
--- Adding Foreign Key Constraints for table `Histories`
-ALTER TABLE `Histories`
-  ADD CONSTRAINT `fk_Histories_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Histories_RequestId` FOREIGN KEY (`RequestId`) REFERENCES `Requests` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Histories_OrderId` FOREIGN KEY (`OrderId`) REFERENCES `Orders` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- Adding Foreign Key Constraint for table `Locations`
-ALTER TABLE `Locations`
-  ADD CONSTRAINT `fk_Locations_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- Adding Foreign Key Constraints for table `Orders`
-ALTER TABLE `Orders`
-  ADD CONSTRAINT `fk_Orders_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Orders_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Orders_LocationId` FOREIGN KEY (`LocationId`) REFERENCES `Locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---Table seeder
-
---Inserting dummy data
 INSERT INTO `Users` (`id`, `username`, `email`, `password`, `role`, `position`, `firstName`, `lastName`, `phone`, `createdAt`, `updatedAt`) VALUES
 (1, 'Willyam', 'willy@mail.com', '$2a$10$ij4xv1StjIe/CzVtEJwXGOkibXOFhRoz5tKidN/j/tqbM1ag1NpsS', 'admin', 'Stock Manager', 'Willyam', 'Dyanata', '081234567890', '2023-12-14 13:18:34', '2023-12-14 13:18:34'),
 (2, 'Steven', 'steven@mail.com', '$2a$10$ij4xv1StjIe/CzVtEJwXGOkibXOFhRoz5tKidN/j/tqbM1ag1NpsS', 'employee', 'Staff Gudang A', 'Steven', 'Setiadi', '085294568463', '2023-12-14 14:18:00', '2023-12-14 14:18:00');
@@ -177,3 +151,68 @@ INSERT INTO `Locations` (`id`, `name`, `qty`, `createdAt`, `updatedAt`, `Product
 (15, 'Gudang A', 10, '2023-12-14 13:18:34', '2023-12-14 13:18:34', 8),
 (16, 'Gudang B', 10, '2023-12-14 13:18:34', '2023-12-14 13:18:34', 8),
 (17, 'Gudang A', 10, '2023-12-14 13:18:34', '2023-12-14 13:18:34', 9);
+
+-- AUTO_INCREMENT for table `Carts`
+--
+ALTER TABLE `Carts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `Histories`
+--
+ALTER TABLE `Histories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `Locations`
+--
+ALTER TABLE `Locations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `Orders`
+--
+ALTER TABLE `Orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `Products`
+--
+ALTER TABLE `Products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `Requests`
+--
+ALTER TABLE `Requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `Users`
+--
+ALTER TABLE `Users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+-- Adding Foreign Key Constraints for table `Carts`
+ALTER TABLE `Carts`
+  ADD CONSTRAINT `fk_Carts_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Carts_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `Products` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Carts_LocationId` FOREIGN KEY (`LocationId`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Carts_OrderId` FOREIGN KEY (`OrderId`) REFERENCES `Orders` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  
+-- Adding Foreign Key Constraints for table `Histories`
+ALTER TABLE `Histories`
+  ADD CONSTRAINT `fk_Histories_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Histories_RequestId` FOREIGN KEY (`RequestId`) REFERENCES `Requests` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Histories_OrderId` FOREIGN KEY (`OrderId`) REFERENCES `Orders` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- Adding Foreign Key Constraint for table `Locations`
+ALTER TABLE `Locations`
+  ADD CONSTRAINT `fk_Locations_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Adding Foreign Key Constraints for table `Orders`
+ALTER TABLE `Orders`
+  ADD CONSTRAINT `fk_Orders_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Orders_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Orders_LocationId` FOREIGN KEY (`LocationId`) REFERENCES `Locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

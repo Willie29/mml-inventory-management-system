@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const secret = 'mmlsecretcode123'
 const createToken = (payload) => {
     try {
-        return jwt.sign(payload, secret, {expiresIn: '24h'})
+        return jwt.sign(payload, secret, {expiresIn: '10m'})
     } catch (error) {
         return error
     }

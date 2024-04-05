@@ -7,14 +7,31 @@ const {Op} = require("sequelize");
 class Controller {
     static async register(req, res, next) {
         try {
-            const user = await User.create(req.body)
+            const requiredFields = ['username', 'email', 'password', 'role', 'phone', 'position', 'firstName', 'lastName'];
 
-            return response.successResponse(res, null, `${user.username} with email ${user.email} has been created`)
-        } catch (error) {
-            if (error?.original?.code === '23502') {
-                throw res.status(400).json({message: `Username is empty`});
+            // Check if any required field is empty in the request body
+            const emptyFields = requiredFields.filter(field => !req.body[field]);
+    
+            if (emptyFields.length > 0) {
+                const errorMessage = "Fields can\'t be empty: " + emptyFields.map(field => `${field}`).join(`, `);
+                return res.status(400).json({ message: errorMessage });
             }
-            next(error)
+
+            const checkUser = await User.findOne({
+                where: {
+                    username: req.body.username
+                }
+            });
+    
+            if (checkUser) {
+                return res.status(400).json({ message: 'Username is already in use' });
+            }
+
+            const user = await User.create(req.body);
+
+            return response.successResponse(res, null, `${user.username} with email ${user.email} has been created`);
+        } catch (error) {
+            next(error);
         }
     }
 
@@ -48,6 +65,12 @@ class Controller {
                 email: findUser.email,
             };
             const token = createToken(payload);
+
+            res.cookie('jwt_token', token, { 
+                httpOnly: true, 
+                maxAge: 1 * 60 * 1000 
+            });
+
             const data = {
                 id: findUser.id,
                 token,
