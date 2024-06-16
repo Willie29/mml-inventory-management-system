@@ -5,7 +5,7 @@ class Controller {
         try {
             const locations = await Location.findAll();
 
-            if(!locations) throw { message: 'LocationNotFound' } // Jika lokasi tidak ditemukan, lemparkan error (akan ditangkap oleh middleware error
+            if(!locations) throw { message: 'LocationNotFound' }
 
             return response.successResponse(res, locations, 'Successfully get all locations'); // Kirim response dengan helper response
         } catch (err) {

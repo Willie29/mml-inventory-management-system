@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Request',
-        timestamps: true, // Enable auto-generated timestamps
+        timestamps: true // Enable auto-generated timestamps
     });
     return Request;
 }

@@ -50,11 +50,42 @@ class Controller {
 
     static async getAllRequests(req, res, next) {
         try {
-            const {user_id, status, name} = req.query; // Assuming the search parameters are passed in the query string
+            // const {user_id, status, name} = req.query; // Assuming the search parameters are passed in the query string
 
 
-            // Build the query object based on the existence of search parameters
-            const options = {
+            // // Build the query object based on the existence of search parameters
+            // const options = {
+                // include: [{
+                //     model: Location, attributes: ['id', 'name', 'qty']
+                // }, {
+                //     model: Product, attributes: ['id', 'name', 'category']
+                // }, {
+                //     model: User
+                // }]
+            // };
+
+
+            // if (user_id) {
+            //     options.where = {
+            //         UserId: {[Op.like]: `%${user_id}%`} // Searching product by name
+            //     };
+            // }
+
+            // if(status){
+            //     options.where = {
+            //         status: status
+            //     };
+            // }
+
+            // if(name){
+            //     options.include[1].where = {
+            //         name: {
+            //             [Op.like]: `%${name}%`
+            //         }
+            //     }
+            // }
+
+            const products = await Request.findAll({
                 include: [{
                     model: Location, attributes: ['id', 'name', 'qty']
                 }, {
@@ -62,30 +93,7 @@ class Controller {
                 }, {
                     model: User
                 }]
-            };
-
-
-            if (user_id) {
-                options.where = {
-                    UserId: {[Op.like]: `%${user_id}%`} // Searching product by name
-                };
-            }
-
-            if(status){
-                options.where = {
-                    status: status
-                };
-            }
-
-            if(name){
-                options.include[1].where = {
-                    name: {
-                        [Op.like]: `%${name}%`
-                    }
-                }
-            }
-
-            const products = await Request.findAll(options);
+            });
             return response.successResponse(res, products, 'Request retrieved successfully');
         } catch (err) {
             console.log(err)
@@ -114,7 +122,7 @@ class Controller {
     static async createRequest(req, res, next) {
         try {
             const newRequest = await Request.create({
-                ...req.body,
+                ...req.body, UserId: req.params.id
             });
             return response.successResponse(res, newRequest, 'Request created successfully');
         } catch (err) {
@@ -153,7 +161,15 @@ class Controller {
                 throw {message: 'Request not found', statusCode: 404};
             }
 
-            const updatedRequest = await request.update(req.body);
+            const updatedRequest = await request.update({
+                status: 'confirmed',
+                confirmTime: new Date(),
+                quantity: req.body.quantity
+            }, {
+                where: {
+                    id: request.id
+                }
+            })
 
             return response.successResponse(res, updatedRequest, 'Request updated successfully');
         } catch (err) {

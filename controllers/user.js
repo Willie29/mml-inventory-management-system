@@ -9,7 +9,6 @@ class Controller {
         try {
             const requiredFields = ['username', 'email', 'password', 'role', 'phone', 'position', 'firstName', 'lastName'];
 
-            // Check if any required field is empty in the request body
             const emptyFields = requiredFields.filter(field => !req.body[field]);
     
             if (emptyFields.length > 0) {

@@ -19,18 +19,18 @@ class Controller {
 
     static async getAllOrders(req, res, next) {
         try {
-            const {name} = req.query
-            let where = {}
-            if(name){
-                where = {
-                    applicantStaff: {
-                        [Op.like]: `%${name}%`
-                    }
-                }
-            }
+            // const {name} = req.query
+            // let where = {}
+            // if(name){
+            //     where = {
+            //         applicantStaff: {
+            //             [Op.like]: `%${name}%`
+            //         }
+            //     }
+            // }
 
             const order = await Order.findAll({
-                where,
+                // where,
                 include: ['User', 'Location', 'Product', {
                     model: Cart,
                     include: [Location]

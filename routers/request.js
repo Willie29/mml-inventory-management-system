@@ -2,7 +2,7 @@ const router = require('express').Router();
 const controller = require('../controllers/request');
 
 router.get('/user/:id', controller.getAllRequestByUser);
-router.post('/', controller.createRequest);
+router.post('/user/:id', controller.createRequest);
 router.get('/', controller.getAllRequests);
 router.put('/:id', controller.updateProduct);
 router.get('/detail/:id', controller.getRequestById);
