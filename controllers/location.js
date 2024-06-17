@@ -7,7 +7,21 @@ class Controller {
 
             if(!locations) throw { message: 'LocationNotFound' }
 
-            return response.successResponse(res, locations, 'Successfully get all locations'); // Kirim response dengan helper response
+            return response.successResponse(res, locations, 'Successfully get all locations');
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    static async getLocbyProId(req, res, next) {
+        try {
+            const locations = await Location.findAll({
+                where: { ProductId: req.params.productId }
+            });
+
+            if(!locations) throw { message: 'LocationNotFound' }
+
+            return response.successResponse(res, locations, 'Successfully get Locations');
         } catch (err) {
             next(err);
         }
