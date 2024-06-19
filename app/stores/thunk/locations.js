@@ -2,9 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import API from "../../config/";
 
-const getAllLocations = createAsyncThunk("locations/getLocations", async () => {
+const getAllLocations = createAsyncThunk("locations/getLocations", 
+  async (payload) => {
   try {
-    return await axios.get(`${API.API_URL}/locations`);
+    return await axios.get(`${API.API_URL}/locations/${payload.id}`);
   } catch (e) {
     return e;
   }

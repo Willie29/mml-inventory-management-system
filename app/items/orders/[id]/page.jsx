@@ -15,33 +15,34 @@ const Page = () => {
     const [qty, setQty] = useState('');
     const [selectedOption, setSelectedOption] = useState("Mitra Utama");
     const [data, setData] = useState([]);
-    const [locationData, setLocationData] = useState([])
-    const [orderItems, setOrderItems] = useState([])
+    const [locationData, setLocationData] = useState([]);
+    const [orderItems, setOrderItems] = useState([]);
 
     const handleSelectChange = (event) => {
         const selectedValue = event.target.value;
 
-        const orderItemsList = [...orderItems]
+        const orderItemsList = [...orderItems];
         orderItemsList.push({
             quantity: qty,
             location: selectedValue,
             ...data
-        })
+        });
 
-        setOrderItems(orderItemsList)
-        setQty('')
+        setOrderItems(orderItemsList);
+        setQty('');
     };
 
-    const getAllLocation = async () => {
+    const getAllLocation = async (productId) => {
         try {
-            const result = await dispatch(locations.getAllLocations())
+            console.log(productId)
+            const result = await dispatch(locations.getAllLocations({id:productId}));
             if (result.payload?.data?.data) {
-                setLocationData(result.payload.data.data)
+                setLocationData(result.payload.data.data);
             }
         } catch (e) {
             Messaege("Error", e.message, "error");
         }
-    }
+    };
 
     const addTocart = async () => {
         router.push("/items/orders/confirm-order?type=cart");
@@ -50,29 +51,32 @@ const Page = () => {
     const onAddOrder = () => {
         dispatch(addOrder(orderItems));
         router.push("/items/orders/confirm-order?type=order");
-    }
+    };
 
     const getProductById = async () => {
         try {
-            const product = await dispatch(products.getProducyById(params.id))
+            const product = await dispatch(products.getProducyById(params.id));
             if (product.payload?.data?.data) {
-                setData(product.payload.data.data)
+                setData(product.payload.data.data);
             }
         } catch (e) {
-            Messaege('Error', e.message, 'error')
+            Messaege('Error', e.message, 'error');
         }
-    }
+    };
 
     useEffect(() => {
-        getProductById();
-        getAllLocation()
+        const fetchData = async () => {
+            await getProductById();
+            const productId = params.id;
+            await getAllLocation(productId);
+        };
+        fetchData();
     }, []);
 
     return (
         <Layouts>
             <div className="container">
                 <div>
-                    {/* <h1>Order Item</h1> */}
                     <div className="card">
                         <h2 className="mt-5 text-center">Order Item</h2>
 
